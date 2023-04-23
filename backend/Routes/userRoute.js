@@ -6,7 +6,9 @@ const {
   userLogout,
   forgotPassword,
   resetPassword,
-  getUserDetails
+  getUserDetails,
+  changePassword,
+  updateProfile
 } = require("../controllers/userController");
 
 const {isAuthenticatedUser} = require("./../Middleware/authenticationCheck");
@@ -23,7 +25,8 @@ router.route("/password/reset/:token").put(resetPassword);
 
 router.route("/me").get(isAuthenticatedUser, getUserDetails);
 
-// router.route("/password/update").put(isAuthenticatedUser, updatePassword);
+router.route("/password/update").put(isAuthenticatedUser, changePassword);
 
-// router.route("/me/update").put(isAuthenticatedUser, updateProfile);
+router.route("/me/update").put(isAuthenticatedUser, updateProfile);
+
 module.exports = router;

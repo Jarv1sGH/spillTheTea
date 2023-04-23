@@ -154,6 +154,57 @@ const getUserDetails = async (req, res) => {
   }
 };
 
+// Change password (for logged in users only)
+const changePassword = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("+password");
+    const isPasswordCorrect = await user.comparePassword(req.body.oldPassword);
+    //If password doesn't match
+    if (!isPasswordCorrect) {
+      return res.status(400).json({
+        error: "Old password entered is incorrect",
+      });
+    }
+
+    if (req.body.oldPassword === req.body.newPassword) {
+      return res.status(400).json({
+        error: "New password cannot be same as the old password",
+      });
+    }
+    if (req.body.newPassword !== req.body.confirmPassword) {
+      return res.status(400).json({
+        error: "Passwords do not match",
+      });
+    }
+    // saving new password
+    user.password = req.body.newPassword;
+    await user.save();
+    sendToken(user, 200, res);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+//Update profile (only for logged in users)
+const updateProfile = async (req, res) => {
+  try {
+    const { name, email } = req.body;
+    const updatedUserData = {
+      name,
+      email,
+    };
+    const user = await User.findByIdAndUpdate(req.user.id, updatedUserData, {
+      new: true,
+      runValidators: true,
+    });
+    res.status(200).json({
+      success: true,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   registerUser,
   userLogin,
@@ -161,4 +212,6 @@ module.exports = {
   forgotPassword,
   resetPassword,
   getUserDetails,
+  changePassword,
+  updateProfile,
 };

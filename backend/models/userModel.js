@@ -23,8 +23,18 @@ const userSchema = new Schema({
   password: {
     type: String,
     required: [true, "Please enter your password"],
-    minLength: [8, "Password should conatain atleast 8 characters"],
+    minLength:8,
     select: false, // when using the find() method on users it will reutrn all the info of a user besides the password
+    validate: {
+      //Validator function checking if the password matches the given criteria
+      validator: function (v) {
+        return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/g.test(
+          v
+        );
+      },
+      message:
+        "Password must contain at least 1 lowercase letter, 1 uppercase letter, 1 number, 1 special character and be at least 8 characters long",
+    },
   },
   profilePic: {
     type: String,
@@ -57,7 +67,6 @@ userSchema.methods.getJWTToken = function () {
 userSchema.methods.comparePassword = async function (Password) {
   return await bcrypt.compare(Password, this.password);
 };
-
 
 // Password Reset Token
 userSchema.methods.getResetPasswordToken = function () {
