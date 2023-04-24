@@ -36,11 +36,16 @@ const userSchema = new Schema({
         "Password must contain at least 1 lowercase letter, 1 uppercase letter, 1 number, 1 special character and be at least 8 characters long",
     },
   },
-  profilePic: {
-    type: String,
-    default: "./../images/Profile.png",
-    required: true,
-  },
+  // profilePic: {
+  //   public_id: {
+  //     type: String,
+  //     // required: true,
+  //   },
+  //   url: {
+  //     type: String,
+  //     // required: true,
+  //   },
+  // },
 
   resetPasswordToken: String,
 

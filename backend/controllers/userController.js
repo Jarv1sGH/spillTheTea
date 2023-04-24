@@ -2,9 +2,15 @@ const User = require("../models/userModel");
 const sendToken = require("../utils/jsonWebToken");
 const sendEmail = require("../utils/sendEmail");
 const crypto = require("crypto");
+// const cloudinary = require("cloudinary");
 
 //User Registration
 const registerUser = async (req, res) => {
+  // const myCloud = await cloudinary.v2.uploader.upload(req.files.profilePic.path, {
+  //   folder: "profilePics",
+  //   width: 150,
+  //   crop: "scale",
+  // });
   const { name, email, password } = req.body;
   try {
     const existingUser = await User.findOne({ email });
@@ -13,11 +19,15 @@ const registerUser = async (req, res) => {
         .status(400)
         .json({ error: "User with the email already exists" });
     }
-    // Create a new user
+    // Creating a new user
     const user = await User.create({
       name,
       email,
       password,
+      // profilePic: {
+      //   public_id: myCloud.public_id,
+      //   url: myCloud.secure_url,
+      // },
     });
     sendToken(user, 201, res);
   } catch (error) {
@@ -193,13 +203,56 @@ const updateProfile = async (req, res) => {
       name,
       email,
     };
+    // if (req.body.profilePic !== "") {
+    //   const user = await User.findById(req.user.id);
+
+    //   const imageId = user.profilePic.public_id;
+
+    //   await cloudinary.v2.uploader.destroy(imageId);
+
+    //   const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+    //     folder: "avatars",
+    //     width: 150,
+    //     crop: "scale",
+    //   });
+
+    //   newUserData.profilePic = {
+    //     public_id: myCloud.public_id,
+    //     url: myCloud.secure_url,
+    //   };
+    // }
     const user = await User.findByIdAndUpdate(req.user.id, updatedUserData, {
       new: true,
       runValidators: true,
+      useFindAndModify: false,
     });
     res.status(200).json({
       success: true,
     });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+//search User
+const searchUser = async (req, res) => {
+  try {
+    // `/user/search?name=jhon%20doe (%20 is space url-encoded)`
+    const searchkeyword = req.query.name;
+
+    //if search keyword is empty
+    if(!searchkeyword){
+      return res.status(400).json({ message: "Search keyword is required" });
+    }
+    
+    // search for users for the given keyword with case-insensitive regex.
+    const users= await User.find({ name: { $regex: searchkeyword, $options: "i" }})
+    if(users.length === 0){
+      return res.status(404).json({
+        message:"No User found with the given name"
+      })
+    }
+    res.status(200).json({users})
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -214,4 +267,5 @@ module.exports = {
   getUserDetails,
   changePassword,
   updateProfile,
+  searchUser,
 };
