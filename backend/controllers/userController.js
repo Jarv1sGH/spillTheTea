@@ -237,22 +237,30 @@ const updateProfile = async (req, res) => {
 //search User
 const searchUser = async (req, res) => {
   try {
-    // `/user/search?name=jhon%20doe (%20 is space url-encoded)`
-    const searchkeyword = req.query.name;
-
-    //if search keyword is empty
-    if(!searchkeyword){
+    // `/user/search?search=jhon%20doe (%20 is space url-encoded)`
+    const searchQuery = req.query.search;
+    //if search Query is empty
+    if (!searchQuery) {
       return res.status(400).json({ message: "Search keyword is required" });
     }
-    
-    // search for users for the given keyword with case-insensitive regex.
-    const users= await User.find({ name: { $regex: searchkeyword, $options: "i" }})
-    if(users.length === 0){
+
+    // converting to case-insensitive regex.
+    const searchKeyword = new RegExp(searchQuery, "i");
+
+    const users = await User.find({
+      // searches both fields for given keyword
+      $or: [{ name: searchKeyword }, { email: searchKeyword }],
+    });
+
+    if (users.length === 0) {
       return res.status(404).json({
-        message:"No User found with the given name"
-      })
+        message: "No User found with the given name",
+      });
     }
-    res.status(200).json({users})
+    res.status(200).json({
+      success: true,
+      users,
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
