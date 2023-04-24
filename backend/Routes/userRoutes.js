@@ -12,7 +12,7 @@ const {
   searchUser,
 } = require("../controllers/userController");
 
-const { isAuthenticatedUser } = require("./../Middleware/authenticationCheck");
+const { isAuthenticatedUser } = require("../Middleware/authenticationCheck");
 
 router.route("/").post(registerUser)
 

@@ -5,7 +5,7 @@ const User = require("../models/userModel");
   try {
     const { token } = req.cookies;
     if (!token) {
-      return res.semd(401).json({
+      return res.status(401).json({
         success: false,
         message: "Please Login to access this resource",
       });

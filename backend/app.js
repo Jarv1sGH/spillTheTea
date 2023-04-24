@@ -13,9 +13,11 @@ app.use(fileUpload());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 //Route Imports
-const user = require("./Routes/userRoute");
+const user = require("./Routes/userRoutes");
+const chat = require("./Routes/chatRoutes");
 
 app.use("/api/v1", user);
+app.use("/api/v1", chat);
 
 // Error-handling middleware function
 app.use((err, req, res, next) => {
