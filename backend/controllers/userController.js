@@ -58,7 +58,7 @@ const userLogin = async (req, res) => {
     //Logging In
     sendToken(user, 200, res);
   } catch (error) {
-    res.status(500).json({ error: error });
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -265,7 +265,6 @@ const searchUser = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
 module.exports = {
   registerUser,
   userLogin,

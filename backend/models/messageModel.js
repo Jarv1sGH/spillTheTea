@@ -17,11 +17,11 @@ const messageSchema = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Chat",
     },
-    recepient: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
+    // recepient: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: "User",
+    //   required: true,
+    // },
   },
   {
     timestamps: true,

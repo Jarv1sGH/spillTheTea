@@ -19,5 +19,5 @@ router.route("/chat/group/rename").put(isAuthenticatedUser, renameGroupChat);
 router.route("/chat/group/delete").delete(isAuthenticatedUser, deleteGroupChat);
 router.route("/chat/group/add").put(isAuthenticatedUser, addUserToGroup);
 router.route("/chat/group/remove").put(isAuthenticatedUser, removeUserFromGroup);
-
+  
 module.exports = router;

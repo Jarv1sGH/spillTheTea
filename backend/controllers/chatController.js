@@ -253,7 +253,7 @@ const addUserToGroup = async (req, res) => {
 };
 
 
-//Removing a user
+//Removing a user from group
 const removeUserFromGroup = async (req, res) => {
   try {
     const { userId, chatId } = req.body;
@@ -315,3 +315,5 @@ module.exports = {
   addUserToGroup,
   removeUserFromGroup,
 };
+
+

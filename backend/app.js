@@ -5,7 +5,6 @@ const fileUpload = require("express-fileupload");
 
 const app = express();
 
-
 // Middlewares
 app.use(express.json());
 app.use(cookieParser());
@@ -15,9 +14,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //Route Imports
 const user = require("./Routes/userRoutes");
 const chat = require("./Routes/chatRoutes");
+const messages = require("./Routes/messageRoutes");
 
 app.use("/api/v1", user);
 app.use("/api/v1", chat);
+app.use("/api/v1", messages);
 
 // Error-handling middleware function
 app.use((err, req, res, next) => {
