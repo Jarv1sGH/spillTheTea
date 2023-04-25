@@ -23,7 +23,7 @@ const userSchema = new Schema({
   password: {
     type: String,
     required: [true, "Please enter your password"],
-    minLength:8,
+    minLength: 8,
     select: false, // when using the find() method on users it will reutrn all the info of a user besides the password
     validate: {
       //Validator function checking if the password matches the given criteria
@@ -36,17 +36,16 @@ const userSchema = new Schema({
         "Password must contain at least 1 lowercase letter, 1 uppercase letter, 1 number, 1 special character and be at least 8 characters long",
     },
   },
-  // profilePic: {
-  //   public_id: {
-  //     type: String,
-  //     // required: true,
-  //   },
-  //   url: {
-  //     type: String,
-  //     // required: true,
-  //   },
-  // },
-
+  profilePic: {
+    public_id: {
+      type: String,
+      required: true,
+    },
+    url: {
+      type: String,
+      required: true,
+    },
+  },
   resetPasswordToken: String,
 
   resetPasswordExpire: Date,

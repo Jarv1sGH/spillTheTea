@@ -156,6 +156,7 @@ const renameGroupChat = async (req, res) => {
     }
     res.status(200).json({
       success: true,
+      message: "Group name updated successfully",
       updatedGroupChat,
     });
   } catch (error) {
@@ -245,13 +246,13 @@ const addUserToGroup = async (req, res) => {
     }
     return res.status(200).json({
       success: true,
+      message: "User added to the group successfully",
       addUser,
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
-
 
 //Removing a user from group
 const removeUserFromGroup = async (req, res) => {
@@ -300,6 +301,7 @@ const removeUserFromGroup = async (req, res) => {
     }
     return res.status(200).json({
       success: true,
+      message: "User removed from the group successfully",
       removeUser,
     });
   } catch (error) {
@@ -315,5 +317,3 @@ module.exports = {
   addUserToGroup,
   removeUserFromGroup,
 };
-
-

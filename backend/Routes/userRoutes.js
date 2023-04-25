@@ -14,7 +14,7 @@ const {
 
 const { isAuthenticatedUser } = require("../Middleware/authenticationCheck");
 
-router.route("/").post(registerUser)
+router.route("/register").post(registerUser);
 
 router.route("/login").post(userLogin);
 

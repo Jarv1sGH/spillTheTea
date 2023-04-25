@@ -24,11 +24,11 @@ const sendMessage = async (req, res) => {
     };
     let message = await Message.create(newMessage);
 
-    message = await message.populate("sender", "name");
+    message = await message.populate("sender", "name profilePic");
     message = await message.populate("chat");
     message = await User.populate(message, {
       path: "chat.users",
-      select: "name email",
+      select: "name profilePic email",
     });
     await Chat.findByIdAndUpdate(chatId, { latestMessage: message });
     res.status(200).json({
@@ -48,7 +48,7 @@ const fetchChatMessages = async (req, res) => {
       return res.status(400).json({ error: "Invalid data" });
     }
     const messages = await Message.find({ chat: chatId })
-      .populate("sender", "name email")
+      .populate("sender", "name profilePic email")
       .populate("chat");
 
     if (!messages) {

@@ -2,15 +2,17 @@ const User = require("../models/userModel");
 const sendToken = require("../utils/jsonWebToken");
 const sendEmail = require("../utils/sendEmail");
 const crypto = require("crypto");
-// const cloudinary = require("cloudinary");
+const cloudinary = require("cloudinary");
 
 //User Registration
 const registerUser = async (req, res) => {
-  // const myCloud = await cloudinary.v2.uploader.upload(req.files.profilePic.path, {
-  //   folder: "profilePics",
-  //   width: 150,
-  //   crop: "scale",
-  // });
+  const file = req.files.profilePic;
+  const myCloud = await cloudinary.v2.uploader.upload(file.tempFilePath, {
+    folder: "profilePics",
+    width: 150,
+    crop: "scale",
+  });
+
   const { name, email, password } = req.body;
   try {
     const existingUser = await User.findOne({ email });
@@ -24,10 +26,10 @@ const registerUser = async (req, res) => {
       name,
       email,
       password,
-      // profilePic: {
-      //   public_id: myCloud.public_id,
-      //   url: myCloud.secure_url,
-      // },
+      profilePic: {
+        public_id: myCloud.public_id,
+        url: myCloud.secure_url,
+      },
     });
     sendToken(user, 201, res);
   } catch (error) {
@@ -203,31 +205,33 @@ const updateProfile = async (req, res) => {
       name,
       email,
     };
-    // if (req.body.profilePic !== "") {
-    //   const user = await User.findById(req.user.id);
+    if (req?.files?.profilePic && req.files.profilePic.size > 0) {
+      const user = await User.findById(req.user.id);
 
-    //   const imageId = user.profilePic.public_id;
+      const imageId = user.profilePic.public_id;
 
-    //   await cloudinary.v2.uploader.destroy(imageId);
+      await cloudinary.v2.uploader.destroy(imageId);
+      const file = req.files.profilePic;
+      const myCloud = await cloudinary.v2.uploader.upload(file.tempFilePath, {
+        folder: "profilePics",
+        width: 150,
+        crop: "scale",
+      });
 
-    //   const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
-    //     folder: "avatars",
-    //     width: 150,
-    //     crop: "scale",
-    //   });
-
-    //   newUserData.profilePic = {
-    //     public_id: myCloud.public_id,
-    //     url: myCloud.secure_url,
-    //   };
-    // }
-    const user = await User.findByIdAndUpdate(req.user.id, updatedUserData, {
+      updatedUserData.profilePic = {
+        public_id: myCloud.public_id,
+        url: myCloud.secure_url,
+      };
+    }
+    //finding the user and updating it
+    await User.findByIdAndUpdate(req.user.id, updatedUserData, {
       new: true,
       runValidators: true,
       useFindAndModify: false,
     });
     res.status(200).json({
       success: true,
+      message: "Profile updated successfully",
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
