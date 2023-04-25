@@ -12,7 +12,10 @@ const userSchema = new Schema({
     maxLength: [25, "Name cannot exceed 25 characters"],
     minLength: [3, "Name should contain atleast 3 characters"],
   },
-
+  aboutMe: {
+    type: String,
+    maxLength: [100, "About me cannot exceed 100 characters"],
+  },
   email: {
     type: String,
     required: [true, "Please enter your Email"],
@@ -40,10 +43,13 @@ const userSchema = new Schema({
     public_id: {
       type: String,
       required: true,
+      default: "profilePics/cocfn4hrceqt4rzdcsx3",
     },
     url: {
       type: String,
       required: true,
+      default:
+        "https://res.cloudinary.com/dz8mx0clv/image/upload/v1682423291/profilePics/cocfn4hrceqt4rzdcsx3.png",
     },
   },
   resetPasswordToken: String,

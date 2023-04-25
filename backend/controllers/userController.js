@@ -6,26 +6,40 @@ const cloudinary = require("cloudinary");
 
 //User Registration
 const registerUser = async (req, res) => {
-  const file = req.files.profilePic;
-  const myCloud = await cloudinary.v2.uploader.upload(file.tempFilePath, {
-    folder: "profilePics",
-    width: 150,
-    crop: "scale",
-  });
-
-  const { name, email, password } = req.body;
   try {
+    const { name, email, password, aboutMe } = req.body;
+    const file = req.files?.profilePic;
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res
         .status(400)
         .json({ error: "User with the email already exists" });
     }
+    //If user does not provide a profile pic it creates one with the default one
+    if (!file) {
+      // Creating a new user with default profile pic
+      const user = await User.create({
+        name,
+        email,
+        password,
+        aboutMe,
+      });
+      sendToken(user, 201, res);
+    }
+
+    //If user provides a profile pic it uploads it to cloudinary and creates a new user
+    const myCloud = await cloudinary.v2.uploader.upload(file.tempFilePath, {
+      folder: "profilePics",
+      width: 150,
+      crop: "scale",
+    });
+
     // Creating a new user
     const user = await User.create({
       name,
       email,
       password,
+      aboutMe,
       profilePic: {
         public_id: myCloud.public_id,
         url: myCloud.secure_url,
@@ -200,11 +214,14 @@ const changePassword = async (req, res) => {
 //Update profile (only for logged in users)
 const updateProfile = async (req, res) => {
   try {
-    const { name, email } = req.body;
+    const { name, email, aboutMe } = req.body;
     const updatedUserData = {
       name,
       email,
+      aboutMe,
     };
+
+    // If user updates profile picture
     if (req?.files?.profilePic && req.files.profilePic.size > 0) {
       const user = await User.findById(req.user.id);
 
@@ -212,6 +229,9 @@ const updateProfile = async (req, res) => {
 
       await cloudinary.v2.uploader.destroy(imageId);
       const file = req.files.profilePic;
+      if (!file) {
+        return res.status(400).json({ error: "Please upload a profile pic" });
+      }
       const myCloud = await cloudinary.v2.uploader.upload(file.tempFilePath, {
         folder: "profilePics",
         width: 150,
@@ -223,6 +243,7 @@ const updateProfile = async (req, res) => {
         url: myCloud.secure_url,
       };
     }
+    
     //finding the user and updating it
     await User.findByIdAndUpdate(req.user.id, updatedUserData, {
       new: true,
