@@ -1,7 +1,6 @@
 const Chat = require("../models/chatModel");
 const User = require("../models/userModel");
 const Message = require("../models/messageModel");
-// const { isValidObjectId } = require("mongoose");
 
 //send messages
 const sendMessage = async (req, res) => {

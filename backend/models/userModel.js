@@ -5,57 +5,62 @@ const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const { Schema } = mongoose;
 
-const userSchema = new Schema({
-  name: {
-    type: String,
-    required: [true, "Please enter your name"],
-    maxLength: [25, "Name cannot exceed 25 characters"],
-    minLength: [3, "Name should contain atleast 3 characters"],
-  },
-  aboutMe: {
-    type: String,
-    maxLength: [100, "About me cannot exceed 100 characters"],
-  },
-  email: {
-    type: String,
-    required: [true, "Please enter your Email"],
-    unique: true,
-    validate: [validator.isEmail, "Please enter a valid email address"],
-  },
+const userSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: [true, "Please enter your name"],
+      maxLength: [25, "Name cannot exceed 25 characters"],
+      minLength: [3, "Name should contain atleast 3 characters"],
+    },
+    aboutMe: {
+      type: String,
+      maxLength: [100, "About me cannot exceed 100 characters"],
+    },
+    email: {
+      type: String,
+      required: [true, "Please enter your Email"],
+      unique: true,
+      validate: [validator.isEmail, "Please enter a valid email address"],
+    },
 
-  password: {
-    type: String,
-    required: [true, "Please enter your password"],
-    minLength: 8,
-    select: false, // when using the find() method on users it will reutrn all the info of a user besides the password
-    validate: {
-      //Validator function checking if the password matches the given criteria
-      validator: function (v) {
-        return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/g.test(
-          v
-        );
+    password: {
+      type: String,
+      required: [true, "Please enter your password"],
+      minLength: 8,
+      select: false, // when using the find() method on users it will reutrn all the info of a user besides the password
+      validate: {
+        //Validator function checking if the password matches the given criteria
+        validator: function (v) {
+          return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/g.test(
+            v
+          );
+        },
+        message:
+          "Password must contain at least 1 lowercase letter, 1 uppercase letter, 1 number, 1 special character and be at least 8 characters long",
       },
-      message:
-        "Password must contain at least 1 lowercase letter, 1 uppercase letter, 1 number, 1 special character and be at least 8 characters long",
     },
-  },
-  profilePic: {
-    public_id: {
-      type: String,
-      required: true,
-      default: "profilePics/cocfn4hrceqt4rzdcsx3",
+    profilePic: {
+      public_id: {
+        type: String,
+        required: true,
+        default: "profilePics/cocfn4hrceqt4rzdcsx3",
+      },
+      url: {
+        type: String,
+        required: true,
+        default:
+          "https://res.cloudinary.com/dz8mx0clv/image/upload/v1682423291/profilePics/cocfn4hrceqt4rzdcsx3.png",
+      },
     },
-    url: {
-      type: String,
-      required: true,
-      default:
-        "https://res.cloudinary.com/dz8mx0clv/image/upload/v1682423291/profilePics/cocfn4hrceqt4rzdcsx3.png",
-    },
-  },
-  resetPasswordToken: String,
+    resetPasswordToken: String,
 
-  resetPasswordExpire: Date,
-});
+    resetPasswordExpire: Date,
+  },
+  {
+    timestamps: true,
+  }
+);
 
 userSchema.pre("save", async function (next) {
   //If password is not modified next() calls the next middleware function.

@@ -9,7 +9,6 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(fileUpload({ useTempFiles: true }));
-// app.use(fileUpload());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 //Route Imports
