@@ -3,6 +3,7 @@ const sendToken = require("../utils/jsonWebToken");
 const sendEmail = require("../utils/sendEmail");
 const crypto = require("crypto");
 const cloudinary = require("cloudinary");
+const fs = require("fs");
 
 //User Registration
 const registerUser = async (req, res) => {
@@ -32,6 +33,15 @@ const registerUser = async (req, res) => {
       folder: "profilePics",
       width: 150,
       crop: "scale",
+    });
+
+    // deleting the temporary file
+    fs.unlink(file.tempFilePath, (err) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      console.log("Temporary file deleted");
     });
 
     // Creating a new user
@@ -236,6 +246,14 @@ const updateProfile = async (req, res) => {
         folder: "profilePics",
         width: 150,
         crop: "scale",
+      });
+      // deleting the temporary file
+      fs.unlink(file.tempFilePath, (err) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        console.log("Temporary file deleted");
       });
 
       updatedUserData.profilePic = {
