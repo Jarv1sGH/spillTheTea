@@ -38,11 +38,11 @@ const createChat = async (req, res) => {
     });
 
     if (existingChat.length > 0) {
-      // since there will always be one chat b/w two users hence the 0th index in the array
+      // since there will always only be one chat b/w two users hence the 0th index in the array
       return res.status(200).json({ existingChat: existingChat[0] });
     }
     const chatData = {
-      chatName: "sender",
+      chatName: req.user.name,
       isGroupChat: false,
       users: [userId, recipientId],
     };

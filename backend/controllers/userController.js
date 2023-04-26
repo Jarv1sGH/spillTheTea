@@ -24,7 +24,7 @@ const registerUser = async (req, res) => {
         password,
         aboutMe,
       });
-      sendToken(user, 201, res);
+      return sendToken(user, 201, res);
     }
 
     //If user provides a profile pic it uploads it to cloudinary and creates a new user
@@ -243,7 +243,7 @@ const updateProfile = async (req, res) => {
         url: myCloud.secure_url,
       };
     }
-    
+
     //finding the user and updating it
     await User.findByIdAndUpdate(req.user.id, updatedUserData, {
       new: true,
