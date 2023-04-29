@@ -1,0 +1,293 @@
+* {
+  box-sizing: border-box;
+}
+.welcomeContainer {
+  font-family: "Montserrat", sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+#welcomeText {
+  font-size: 3rem;
+  padding: 15px 0;
+}
+#passwordCriteria {
+  font-size: 11px;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  margin-left: 30px;
+  width: 60%;
+  line-height: 13px;
+}
+h1 {
+  font-weight: bold;
+  margin: 0;
+}
+
+p {
+  font-size: 14px;
+  font-weight: 100;
+  line-height: 20px;
+  letter-spacing: 0.5px;
+  margin: 20px 0 30px;
+}
+
+#forgotPasswordText {
+  color: #239232;
+  font-size: 14px;
+  margin: 15px 0;
+  cursor: pointer;
+}
+.LoginSignContainer {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 30px 14px 28px rgba(0, 0, 5, 0.2), 0 10px 10px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+  opacity: 85%;
+  width: 768px;
+  max-width: 100%;
+  min-height: 500px;
+  transition: 333ms;
+  color: black;
+}
+
+.formContainer {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  transition: all 0.6s ease-in-out;
+}
+.formContainer form {
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  padding: 0 10px;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.formContainer label {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+.formContainer input {
+  background: #eee;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 15px;
+  margin: 8px 0;
+  width: 60%;
+}
+
+.formContainer input:hover {
+  transform: scale(102%);
+}
+.formContainer i {
+  padding: 0 10px;
+}
+.forgotPassword label input {
+  width: 70%;
+}
+.appIcon {
+  padding: 0 40px;
+  font-size: 1.5rem;
+  position: relative;
+}
+.appIcon i:last-child {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  color: black;
+  left: 23px;
+  top: 1px;
+  width: 35px;
+  height: 35px;
+}
+
+button {
+  border-radius: 50px;
+  box-shadow: 0 1px 1px;
+  border: 1px solid #008ecf;
+  background: #008ecf;
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 12px 45px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: transform 80ms ease-in;
+}
+button:hover {
+  cursor: pointer;
+  background: #008dcfd9;
+}
+
+button:active {
+  transform: scale(0.95);
+}
+
+button:focus {
+  outline: none;
+}
+
+button.ghost {
+  background: transparent;
+  border-color: #fff;
+}
+.signIn {
+  left: 0;
+  width: 50%;
+  z-index: 2;
+}
+
+.signUp {
+  left: 0;
+  width: 50%;
+  z-index: 1;
+  opacity: 0;
+}
+
+.overlayContainer {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+  transition: transform 0.6s ease-in-out;
+  z-index: 100;
+}
+.overlay {
+  background: #ff416c;
+  background: linear-gradient(to right, #008ecf, #008ecf) no-repeat 0 0 / cover;
+  color: #fff;
+  position: relative;
+  left: -100%;
+  height: 100%;
+  width: 200%;
+  transform: translateY(0);
+  transition: transform 0.6s ease-in-out;
+}
+
+.overlayPanel {
+  position: absolute;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0 40px;
+  height: 100%;
+  width: 50%;
+  text-align: center;
+  transform: translateY(0);
+  transition: transform 0.6s ease-in-out;
+}
+
+.overlayRight {
+  right: 0;
+  transform: translateY(0);
+}
+
+.overlayLeft {
+  transform: translateY(-20%);
+}
+
+/* Move signin to right */
+.LoginSignContainer.rightPanelActive .signIn {
+  transform: translateY(100%);
+}
+
+/* Move overlay to left */
+.LoginSignContainer.rightPanelActive .overlayContainer {
+  transform: translateX(-100%);
+}
+
+/* Bring signup over signin */
+.LoginSignContainer.rightPanelActive .signUp {
+  transform: translateX(100%);
+  opacity: 1;
+  z-index: 5;
+}
+
+/* Move overlay back to right */
+.LoginSignContainer.rightPanelActive .overlay {
+  transform: translateX(50%);
+}
+
+/* Bring back the text to center */
+.LoginSignContainer.rightPanelActive .overlayLeft {
+  transform: translateY(0);
+}
+
+/* Same effect for right */
+.LoginSignContainer.rightPanelActive .overlayRight {
+  transform: translateY(20%);
+}
+
+#backBtn {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  background: none;
+  color: black;
+  font-size: 2rem;
+  border: none;
+  padding: 0;
+  box-shadow: none;
+}
+
+@media screen and (max-width: 550px) {
+  .welcomeContainer {
+    padding-bottom: 6rem;
+  }
+  #welcomeText {
+    font-size: 1.8rem;
+    text-align: center;
+  }
+  .LoginSignContainer {
+    width: 95%;
+    border-radius: 2px;
+  }
+  .overlayContainer {
+    height: 10%;
+    width: 100%;
+    left: 0;
+  }
+  .overlayPanel > h1,
+  p {
+    display: none;
+  }
+  #forgotPasswordText{
+    display: block;
+  }
+  button {
+    padding: 12px 22px;
+    width: 50%;
+    border: none;
+    box-shadow: none;
+  }
+  .LoginSignContainer.rightPanelActive .signUp {
+    transform: translateX(0%);
+  }
+  .LoginSignContainer.rightPanelActive .overlayContainer {
+    transform: translateY(901%);
+  }
+  .signUp {
+    width: 100%;
+  }
+  .signIn {
+    width: 100%;
+  }
+}

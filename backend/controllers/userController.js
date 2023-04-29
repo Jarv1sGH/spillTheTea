@@ -8,7 +8,7 @@ const fs = require("fs");
 //User Registration
 const registerUser = async (req, res) => {
   try {
-    const { name, email, password, aboutMe } = req.body;
+    const { name, email, password } = req.body;
     const file = req.files?.profilePic;
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -19,12 +19,13 @@ const registerUser = async (req, res) => {
     //If user does not provide a profile pic it creates one with the default one
     if (!file) {
       // Creating a new user with default profile pic
-      const user = await User.create({
+      const newUser = await User.create({
         name,
         email,
         password,
-        aboutMe,
       });
+      // If newUser was returned directly it was including the password field
+      const user = await User.findById(newUser._id);
       return sendToken(user, 201, res);
     }
 
@@ -45,16 +46,17 @@ const registerUser = async (req, res) => {
     });
 
     // Creating a new user
-    const user = await User.create({
+    const newUser = await User.create({
       name,
       email,
       password,
-      aboutMe,
       profilePic: {
         public_id: myCloud.public_id,
         url: myCloud.secure_url,
       },
     });
+    // If newUser was returned directly it was including the password field
+    const user = await User.findById(newUser._id);
     sendToken(user, 201, res);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -68,18 +70,21 @@ const userLogin = async (req, res) => {
     if (!email || !password) {
       return res.status(400).json({ error: "Please enter Email & Password" });
     }
-    // Finding user in DB for given email and password
-    const user = await User.findOne({ email }).select("+password");
+    // Finding user in DB for given email
+    const doesUserExist = await User.findOne({ email }).select("+password");
     //If user is not found
-    if (!user) {
+    if (!doesUserExist) {
       return res.status(401).json({ error: "Invalid Email Id or Password" });
     }
     //Checking Password
-    const isPasswordMatched = await user.comparePassword(password);
+    const isPasswordMatched = await doesUserExist.comparePassword(password);
     //if password doesn't match
     if (!isPasswordMatched) {
       return res.status(401).json({ error: "Invalid Email Id or Password" });
     }
+
+    // Returns the user without the password hash
+    const user = await User.findById(doesUserExist._id);
 
     //Logging In
     sendToken(user, 200, res);
@@ -116,13 +121,13 @@ const forgotPassword = async (req, res) => {
 
     // Get Reset Password Token
     const resetToken = user.getResetPasswordToken();
-    // saving the user after token generation
+    // saving the user after reset password token generation
     await user.save({ validateBeforeSave: false });
 
     const resetPasswordUrl = `${req.protocol}://${req.get(
       "host"
     )}/password/reset/${resetToken}`;
-    const emailMessage = `You Requested to change your password. Here is the link to reset yur password  \n\n${resetPasswordUrl}\n
+    const emailMessage = `You Requested to change your password. Here is the link to reset your password  \n\n${resetPasswordUrl}\n
     If not requested by you then you can disregard this email`;
 
     try {
@@ -155,22 +160,25 @@ const resetPassword = async (req, res) => {
       .digest("hex");
 
     //finding the user with the same token hash
-    const user = await User.findOne({
+    const existingUser = await User.findOne({
       resetPasswordToken,
       resetPasswordExpire: { $gt: Date.now() }, // Comparing expiring time here, The token expire time should be greater than the current time
     });
 
-    if (!user) {
+    if (!existingUser) {
       return res
         .status(400)
         .json({ message: "Reset password token is invalid or expired" });
     }
 
-    user.password = req.body.password;
-    user.resetPasswordToken = undefined;
-    user.resetPasswordExpire = undefined;
+    existingUser.password = req.body.password;
+    existingUser.resetPasswordToken = undefined;
+    existingUser.resetPasswordExpire = undefined;
 
-    await user.save(); //saving user after password change
+    await existingUser.save(); //saving user after password change
+
+    //returns the user without the password hash
+    const user = await User.findById(existingUser._id);
     sendToken(user, 200, res);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -180,7 +188,7 @@ const resetPassword = async (req, res) => {
 //Get user details(for logged in users only)
 const getUserDetails = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user._id);
     return res.status(200).json({
       success: true,
       user,
@@ -193,8 +201,10 @@ const getUserDetails = async (req, res) => {
 // Change password (for logged in users only)
 const changePassword = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select("+password");
-    const isPasswordCorrect = await user.comparePassword(req.body.oldPassword);
+    const existingUser = await User.findById(req.user._id).select("+password");
+    const isPasswordCorrect = await existingUser.comparePassword(
+      req.body.oldPassword
+    );
     //If password doesn't match
     if (!isPasswordCorrect) {
       return res.status(400).json({
@@ -213,8 +223,11 @@ const changePassword = async (req, res) => {
       });
     }
     // saving new password
-    user.password = req.body.newPassword;
-    await user.save();
+    existingUser.password = req.body.newPassword;
+    await existingUser.save();
+
+    //returns the user without the password hash
+    const user = await User.findById(existingUser._id);
     sendToken(user, 200, res);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -233,7 +246,7 @@ const updateProfile = async (req, res) => {
 
     // If user updates profile picture
     if (req?.files?.profilePic && req.files.profilePic.size > 0) {
-      const user = await User.findById(req.user.id);
+      const user = await User.findById(req.user._id);
 
       const imageId = user.profilePic.public_id;
 
@@ -263,7 +276,7 @@ const updateProfile = async (req, res) => {
     }
 
     //finding the user and updating it
-    await User.findByIdAndUpdate(req.user.id, updatedUserData, {
+    await User.findByIdAndUpdate(req.user._id, updatedUserData, {
       new: true,
       runValidators: true,
       useFindAndModify: false,
