@@ -1,17 +1,31 @@
 import React from "react";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { loginUser } from "../../Reducers/userReducers/userSlice";
 const SignInForm = (props) => {
-  const {
-    signInFormSubmit,
-    signInInputChange,
-    signInFormData,
-    setForgotPassword,
-  } = props;
+  const dispatch = useDispatch();
+  const { setShowForgotPassword } = props;
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+  //SignIn form data
+  const signInInputChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+  const signInFormSubmit = (e) => {
+    e.preventDefault();
+    dispatch(loginUser(formData));
+  };
   const onClickHandler = () => {
-    setForgotPassword(true);
+    setShowForgotPassword(true);
   };
   return (
     <div className=" formContainer signIn">
-      <form  onSubmit={signInFormSubmit}>
+      <form onSubmit={signInFormSubmit}>
         <h1>Sign In</h1>
         <label>
           <i className="fa-solid fa-envelope"></i>{" "}
@@ -19,7 +33,7 @@ const SignInForm = (props) => {
             type="email"
             name="email"
             placeholder="Email"
-            value={signInFormData.email}
+            value={formData.email}
             onChange={signInInputChange}
             required
             autoComplete="off"
@@ -31,7 +45,7 @@ const SignInForm = (props) => {
             name="password"
             type="password"
             placeholder="Password"
-            value={signInFormData.password}
+            value={formData.password}
             onChange={signInInputChange}
             required
             autoComplete="off"
@@ -42,7 +56,7 @@ const SignInForm = (props) => {
         </p>
         <button type="submit">Log In</button>
       </form>
-     </div>
+    </div>
   );
 };
 

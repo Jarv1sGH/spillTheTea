@@ -1,15 +1,26 @@
 import React from "react";
-// import { Link } from "react-router-dom";
-// import "./Welcome.css";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { forgotPassword } from "../../Reducers/userReducers/forgotPasswordSlice";
 const ForgotPassword = (props) => {
-  const {
-    setForgotPassword,
-    forgotPasswordData,
-    forgotPasswordSubmit,
-    forgotPasswordInputChange,
-  } = props;
+  const [formData, setFormData] = useState({
+    email: "",
+  });
+  const dispatch = useDispatch();
+  const { setShowForgotPassword } = props;
   const onClickHandler = () => {
-    setForgotPassword(false);
+    setShowForgotPassword(false);
+  };
+  //forgotPassword form data
+  const forgotPasswordInputChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+  const forgotPasswordSubmit = (e) => {
+    e.preventDefault();
+    dispatch(forgotPassword(formData));
   };
   return (
     <div className=" formContainer signIn">
@@ -23,7 +34,7 @@ const ForgotPassword = (props) => {
             type="email"
             name="email"
             placeholder="Enter email associated with your account"
-            value={forgotPasswordData.email}
+            value={formData.email}
             onChange={forgotPasswordInputChange}
             required
             autoComplete="off"

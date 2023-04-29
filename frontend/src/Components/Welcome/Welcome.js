@@ -1,29 +1,14 @@
 import React from "react";
 import "./Welcome.css";
-import { useState, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { registerUser, loginUser } from "../../Reducers/userReducers/userSlice";
+import { useState } from "react";
+// import { useDispatch, useSelector } from "react-redux";
 import SignInForm from "./SignInForm";
 import SignUpForm from "./SignUpForm";
 import ForgotPassword from "./ForgotPassword";
 const Welcome = () => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const [overlay, setOverlay] = useState(false);
-  const [forgotPassword, setForgotPassword] = useState(false);
-  const [signUpFormData, setSignUpFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
-
-  const [signInFormData, setSignInFormData] = useState({
-    email: "",
-    password: "",
-  });
-
-  const [forgotPasswordData, setForgotPasswordData] = useState({
-    email: "",
-  });
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
 
   // for handling overLay
   const overlayHandlerSignUp = () => {
@@ -31,54 +16,7 @@ const Welcome = () => {
   };
   const overlayHandlerLogIn = () => {
     setOverlay(false);
-    setForgotPassword(false);
-  };
-
-  //SignUp form data
-  const signUpInputChange = (e) => {
-    setSignUpFormData({
-      ...signUpFormData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  //SignIn form data
-  const signInInputChange = (e) => {
-    setSignInFormData({
-      ...signInFormData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  //forgotPassword form data
-  const forgotPasswordInputChange = (e) => {
-    setForgotPasswordData({
-      ...forgotPasswordData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  //If user includes a profile pic
-  const fileInputRef = useRef();
-  const handleFileInputChange = () => {
-    const profilePicImg = fileInputRef.current.files[0];
-    setSignUpFormData({
-      ...signUpFormData,
-      profilePic: profilePicImg,
-    });
-  };
-
-  const signUpFormSubmit = (e) => {
-    e.preventDefault();
-    dispatch(registerUser(signUpFormData));
-  };
-  const signInFormSubmit = (e) => {
-    e.preventDefault();
-    dispatch(loginUser(signInFormData));
-  };
-  const forgotPasswordSubmit = (e) => {
-    e.preventDefault();
-    // dispatch(forgotPassword(forgotPasswordData));
+    setShowForgotPassword(false);
   };
 
   return (
@@ -95,28 +33,12 @@ const Welcome = () => {
               : "LoginSignContainer "
           }
         >
-          <SignUpForm
-            signUpFormSubmit={signUpFormSubmit}
-            signUpFormData={signUpFormData}
-            signUpInputChange={signUpInputChange}
-            handleFileInputChange={handleFileInputChange}
-            fileInputRef={fileInputRef}
-          />
+          <SignUpForm />
 
-          {forgotPassword ? (
-            <ForgotPassword
-              setForgotPassword={setForgotPassword}
-              forgotPasswordData={forgotPasswordData}
-              forgotPasswordSubmit={forgotPasswordSubmit}
-              forgotPasswordInputChange={forgotPasswordInputChange}
-            />
+          {showForgotPassword ? (
+            <ForgotPassword setShowForgotPassword={setShowForgotPassword} />
           ) : (
-            <SignInForm
-              signInFormSubmit={signInFormSubmit}
-              signInInputChange={signInInputChange}
-              signInFormData={signInFormData}
-              setForgotPassword={setForgotPassword}
-            />
+            <SignInForm setShowForgotPassword={setShowForgotPassword} />
           )}
 
           {/* Overlay */}

@@ -1,12 +1,34 @@
 import React from "react";
-const SignUpForm = (props) => {
-  const {
-    signUpFormSubmit,
-    signUpFormData,
-    signUpInputChange,
-    handleFileInputChange,
-    fileInputRef,
-  } = props;
+import { useState, useRef } from "react";
+import { useDispatch } from "react-redux";
+import { registerUser} from "../../Reducers/userReducers/userSlice";
+const SignUpForm = () => {
+  const dispatch = useDispatch();
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+  //SignUp form data
+  const signUpInputChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+  //If user includes a profile pic
+  const fileInputRef = useRef();
+  const handleFileInputChange = () => {
+    const profilePicImg = fileInputRef.current.files[0];
+    setFormData({
+      ...formData,
+      profilePic: profilePicImg,
+    });
+  };
+  const signUpFormSubmit = (e) => {
+    e.preventDefault();
+    dispatch(registerUser(formData));
+  };
   return (
     <div className=" formContainer signUp">
       <form onSubmit={signUpFormSubmit}>
@@ -17,7 +39,7 @@ const SignUpForm = (props) => {
             type="text"
             name="name"
             placeholder="Name*"
-            value={signUpFormData.name}
+            value={formData.name}
             onChange={signUpInputChange}
             pattern=".{3,}"
             title="Name must be atleast 3 characters"
@@ -31,7 +53,7 @@ const SignUpForm = (props) => {
             type="email"
             name="email"
             placeholder="Email*"
-            value={signUpFormData.email}
+            value={formData.email}
             onChange={signUpInputChange}
             required
             autoComplete="off"
@@ -44,7 +66,7 @@ const SignUpForm = (props) => {
             type="password"
             pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}"
             placeholder="Password*"
-            value={signUpFormData.password}
+            value={formData.password}
             onChange={signUpInputChange}
             required
             autoComplete="off"
