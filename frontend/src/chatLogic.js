@@ -1,5 +1,3 @@
-import groupIcon from "./images/groupIcon.png";
-
 export const options = {
   headers: {
     "Content-Type": "application/json",
@@ -12,7 +10,7 @@ export const setChatDetails = (chat, user) => {
   if (chat.isGroupChat === true) {
     return {
       chatName: chat?.chatName,
-      avatar: groupIcon,
+      avatar: chat?.groupIcon.url,
     };
   } else if (chat?.users[0]?.email === user?.user?.email) {
     return {
