@@ -50,7 +50,7 @@ const userSchema = new Schema(
         type: String,
         required: true,
         default:
-          "https://res.cloudinary.com/dz8mx0clv/image/upload/v1682423291/profilePics/cocfn4hrceqt4rzdcsx3.png",
+          "https://res.cloudinary.com/dz8mx0clv/image/upload/v1682423174/profilePics/uppdonwxhjgfayfpzh2i.png",
       },
     },
     resetPasswordToken: String,

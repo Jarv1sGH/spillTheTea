@@ -1,0 +1,164 @@
+.menuContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  position: absolute;
+  border: 2px solid #008ecf;
+  /* border: 2px solid #2467fd; */
+  height: 50vh;
+  width: 25vw;
+  border-radius: 10px;
+  z-index: 100;
+  background-color: #1b1d24;
+  bottom: 65px;
+  left: 30px;
+  transition: transform 0.3s ease-out;
+  transform: translateX(-150%);
+}
+.options {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 35%;
+  height: 100%;
+  border-right: 1px solid #26282e;
+}
+.options > ul {
+  display: flex;
+  list-style: none;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+}
+.options > ul > li {
+  text-align: center;
+  padding: 5px;
+  width: 100%;
+  margin: 10px 0;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.options > ul > li:hover {
+  background-color: #008ecf;
+}
+.active {
+  background-color: #008ecf;
+  /* background-color: #2467fd; */
+}
+.themeToggle {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.userContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: inherit;
+  width: 65%;
+}
+.btnContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  /* border: 2px solid; */
+  width: 70%;
+}
+.btnContainer > button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 110px;
+  height: 30px;
+  font-size: 11px;
+}
+
+.slideRight {
+  transform: translateX(10%);
+}
+.userAvatar {
+  padding: 20px;
+}
+.userAvatar > img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.userInfo > p {
+  font-size: 18px;
+  padding: 10px;
+  margin: 0;
+  /* border: 2px solid; */
+}
+.aboutMe {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin: 10px 0;
+  padding: 0px 10px;
+}
+.aboutMe > span {
+  color: rgb(169, 172, 172);
+}
+.aboutMe > p {
+  margin: 2px;
+  font-size: 18px;
+}
+
+.passwordContainer {
+  justify-content: center;
+}
+
+/* inputs */
+.updatePassword {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 7px;
+  position: relative;
+  margin: 30px;
+}
+.eyeIcon {
+  position: absolute;
+  right: 8px;
+}
+.updatePassword .label {
+  font-size: 15px;
+  padding-left: 10px;
+  position: absolute;
+  top: 13px;
+  transition: 0.3s;
+  transform: translateY(-35px);
+  pointer-events: none;
+}
+
+.input {
+  width: 200px;
+  height: 45px;
+  border: none;
+  outline: none;
+  padding: 0px 7px;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 15px;
+  background-color: transparent;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 1),
+    -1px -1px 6px rgba(255, 255, 255, 0.4);
+}
+
+.input:focus {
+  border: 1px solid #008ecf;
+  color: #fff;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 1),
+    -1px -1px 6px rgba(255, 255, 255, 0.4), inset 3px 3px 10px rgba(0, 0, 0, 1),
+    inset -1px -1px 6px rgba(255, 255, 255, 0.4);
+}

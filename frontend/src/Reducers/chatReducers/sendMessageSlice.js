@@ -11,14 +11,10 @@ const options = {
   },
 };
 
-export const forgotPassword = createAsyncThunk(
-  "user/forgotPassword",
-  async (formData) => {
-    const response = await axios.post(
-      `api/v1/password/forgot`,
-      formData,
-      options
-    );
+export const sendMessage = createAsyncThunk(
+  "messages/sendMessage",
+  async (msgData) => {
+    const response = await axios.post(`api/v1/message/`, msgData, options);
     if (response.status >= 200 && response.status < 300) {
       // If response status is 2xx, return the data as usual
       return response.data;
@@ -28,35 +24,26 @@ export const forgotPassword = createAsyncThunk(
     }
   }
 );
-export const clearState = () => (dispatch) => {
-  dispatch(forgotPasswordSlice.actions.setState(null));
-};
-const forgotPasswordSlice = createSlice({
-  name: "forgotPassword",
+
+const sendMessageSlice = createSlice({
+  name: "messages",
   initialState: {
-    message: {},
+    chatData: [],
     loading: false,
     error: null,
   },
-  reducers: {
-    setState: (state, action) => {
-      state.error = action.payload;
-      state.message = action.payload;
-    },
-  },
   extraReducers: (builder) => {
     builder
-      .addCase(forgotPassword.pending, (state) => {
+      .addCase(sendMessage.pending, (state) => {
         state.loading = true;
       })
-      .addCase(forgotPassword.fulfilled, (state, action) => {
-        state.message = action.payload;
+      .addCase(sendMessage.fulfilled, (state, action) => {
+        state.chatData = action.payload;
         state.error = null;
         state.loading = false;
       })
-      .addCase(forgotPassword.rejected, (state, action) => {
+      .addCase(sendMessage.rejected, (state, action) => {
         state.loading = false;
-        state.message = null;
         try {
           state.error = JSON.parse(action.error.message);
         } catch (error) {
@@ -65,5 +52,6 @@ const forgotPasswordSlice = createSlice({
       });
   },
 });
+export const { updateChatData } = sendMessageSlice.actions;
 
-export default forgotPasswordSlice.reducer;
+export default sendMessageSlice.reducer;

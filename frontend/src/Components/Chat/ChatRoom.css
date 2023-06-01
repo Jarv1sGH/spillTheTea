@@ -1,0 +1,117 @@
+.chatHeader {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  border-bottom: 1px solid #26282e;
+  height: 75px;
+}
+.chatHeader > i {
+  position: absolute;
+  right: 10px;
+  font-size: 20px;
+}
+.friendAvatar {
+  margin: 0 10px;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+}
+.chatHeader > p {
+  margin: 1px 0;
+}
+
+.chatRoomInner {
+  height: 83vh;
+  padding: 0px 50px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column-reverse;
+  margin: auto;
+}
+
+.message {
+  display: flex;
+  flex-direction: column;
+}
+
+.msgContent {
+  display: flex;
+  align-items: center;
+  max-width: 80%;
+}
+.flexEnd {
+  align-items: flex-end;
+  justify-content: flex-end;
+  margin-right: 8px;
+}
+.msgContent > p {
+  display: flex;
+  border-radius: 10px;
+  padding: 15px;
+  overflow-wrap: break-word;
+  position: relative;
+}
+.sendMessageBox {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  align-items: center;
+  height: 60px;
+  height: 80px;
+  border-top: 2px solid #26282e;
+}
+
+.sendMessageBoxInner {
+  display: flex;
+  position: relative;
+  width: 95%;
+  padding: 5px;
+}
+.sendMessageBoxInner > input {
+  width: 100%;
+  border-radius: 4px;
+  border: none;
+  height: 40px;
+  color: white;
+  background: #26282e;
+  padding: 10px;
+}
+.sendMessageBoxInner > input:focus {
+  outline: none;
+}
+.sendBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  font-size: 20px;
+  text-align: center;
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  right: 10px;
+}
+.sendBtn {
+  color: #008ecf;
+}
+.listContainer {
+  flex: 1;
+  width: 100%;
+}
+.userMessages {
+  background-color: rgb(155, 72, 212);
+}
+.senderMessages {
+  background: #008ecf;
+}
+
+#senderUserName {
+  font-size: 10px;
+  position: absolute;
+  bottom: -18px;
+  left: 0;
+}

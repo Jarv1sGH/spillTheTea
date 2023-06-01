@@ -11,14 +11,10 @@ const options = {
   },
 };
 
-export const forgotPassword = createAsyncThunk(
-  "user/forgotPassword",
-  async (formData) => {
-    const response = await axios.post(
-      `api/v1/password/forgot`,
-      formData,
-      options
-    );
+export const fetchAllChats = createAsyncThunk(
+  "chats/fetchAllChats",
+  async () => {
+    const response = await axios.get(`api/v1/chats`, options);
     if (response.status >= 200 && response.status < 300) {
       // If response status is 2xx, return the data as usual
       return response.data;
@@ -28,35 +24,26 @@ export const forgotPassword = createAsyncThunk(
     }
   }
 );
-export const clearState = () => (dispatch) => {
-  dispatch(forgotPasswordSlice.actions.setState(null));
-};
-const forgotPasswordSlice = createSlice({
-  name: "forgotPassword",
+
+const allChatsSlice = createSlice({
+  name: "chats",
   initialState: {
-    message: {},
+    chats: [],
     loading: false,
     error: null,
   },
-  reducers: {
-    setState: (state, action) => {
-      state.error = action.payload;
-      state.message = action.payload;
-    },
-  },
   extraReducers: (builder) => {
     builder
-      .addCase(forgotPassword.pending, (state) => {
+      .addCase(fetchAllChats.pending, (state) => {
         state.loading = true;
       })
-      .addCase(forgotPassword.fulfilled, (state, action) => {
-        state.message = action.payload;
+      .addCase(fetchAllChats.fulfilled, (state, action) => {
+        state.chats = action.payload;
         state.error = null;
         state.loading = false;
       })
-      .addCase(forgotPassword.rejected, (state, action) => {
+      .addCase(fetchAllChats.rejected, (state, action) => {
         state.loading = false;
-        state.message = null;
         try {
           state.error = JSON.parse(action.error.message);
         } catch (error) {
@@ -66,4 +53,4 @@ const forgotPasswordSlice = createSlice({
   },
 });
 
-export default forgotPasswordSlice.reducer;
+export default allChatsSlice.reducer;

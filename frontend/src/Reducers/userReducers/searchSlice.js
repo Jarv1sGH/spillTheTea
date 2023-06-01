@@ -11,12 +11,11 @@ const options = {
   },
 };
 
-export const forgotPassword = createAsyncThunk(
-  "user/forgotPassword",
-  async (formData) => {
-    const response = await axios.post(
-      `api/v1/password/forgot`,
-      formData,
+export const searchUsers = createAsyncThunk(
+  "search/searchUsers",
+  async (searchQuery) => {
+    const response = await axios.get(
+      `api/v1/user/search?search=${searchQuery}`,
       options
     );
     if (response.status >= 200 && response.status < 300) {
@@ -28,35 +27,26 @@ export const forgotPassword = createAsyncThunk(
     }
   }
 );
-export const clearState = () => (dispatch) => {
-  dispatch(forgotPasswordSlice.actions.setState(null));
-};
-const forgotPasswordSlice = createSlice({
-  name: "forgotPassword",
+const searchSlice = createSlice({
+  name: "searchUser",
   initialState: {
-    message: {},
+    usersArr: {},
     loading: false,
     error: null,
   },
-  reducers: {
-    setState: (state, action) => {
-      state.error = action.payload;
-      state.message = action.payload;
-    },
-  },
   extraReducers: (builder) => {
     builder
-      .addCase(forgotPassword.pending, (state) => {
+      .addCase(searchUsers.pending, (state) => {
         state.loading = true;
       })
-      .addCase(forgotPassword.fulfilled, (state, action) => {
-        state.message = action.payload;
+      .addCase(searchUsers.fulfilled, (state, action) => {
+        state.usersArr = action.payload;
         state.error = null;
         state.loading = false;
       })
-      .addCase(forgotPassword.rejected, (state, action) => {
+      .addCase(searchUsers.rejected, (state, action) => {
         state.loading = false;
-        state.message = null;
+        state.usersArr = {};
         try {
           state.error = JSON.parse(action.error.message);
         } catch (error) {
@@ -66,4 +56,4 @@ const forgotPasswordSlice = createSlice({
   },
 });
 
-export default forgotPasswordSlice.reducer;
+export default searchSlice.reducer;

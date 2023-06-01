@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
+
 const options = {
   headers: {
     "Content-Type": "application/json",
@@ -11,14 +12,10 @@ const options = {
   },
 };
 
-export const forgotPassword = createAsyncThunk(
-  "user/forgotPassword",
-  async (formData) => {
-    const response = await axios.post(
-      `api/v1/password/forgot`,
-      formData,
-      options
-    );
+export const fetchMessages = createAsyncThunk(
+  "messages/fetchMessages",
+  async (chatId) => {
+    const response = await axios.get(`api/v1/message/${chatId}`, options);
     if (response.status >= 200 && response.status < 300) {
       // If response status is 2xx, return the data as usual
       return response.data;
@@ -28,35 +25,26 @@ export const forgotPassword = createAsyncThunk(
     }
   }
 );
-export const clearState = () => (dispatch) => {
-  dispatch(forgotPasswordSlice.actions.setState(null));
-};
-const forgotPasswordSlice = createSlice({
-  name: "forgotPassword",
+
+const messagesSlice = createSlice({
+  name: "messages",
   initialState: {
-    message: {},
+    messages: [],
     loading: false,
     error: null,
   },
-  reducers: {
-    setState: (state, action) => {
-      state.error = action.payload;
-      state.message = action.payload;
-    },
-  },
   extraReducers: (builder) => {
     builder
-      .addCase(forgotPassword.pending, (state) => {
+      .addCase(fetchMessages.pending, (state) => {
         state.loading = true;
       })
-      .addCase(forgotPassword.fulfilled, (state, action) => {
-        state.message = action.payload;
+      .addCase(fetchMessages.fulfilled, (state, action) => {
+        state.messages = action.payload;
         state.error = null;
         state.loading = false;
       })
-      .addCase(forgotPassword.rejected, (state, action) => {
+      .addCase(fetchMessages.rejected, (state, action) => {
         state.loading = false;
-        state.message = null;
         try {
           state.error = JSON.parse(action.error.message);
         } catch (error) {
@@ -66,4 +54,4 @@ const forgotPasswordSlice = createSlice({
   },
 });
 
-export default forgotPasswordSlice.reducer;
+export default messagesSlice.reducer;

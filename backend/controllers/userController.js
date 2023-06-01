@@ -25,7 +25,9 @@ const registerUser = async (req, res) => {
         password,
       });
       // If newUser was returned directly it was including the password field
-      const user = await User.findById(newUser._id);
+      const user = await User.findById(newUser._id).select(
+        "-resetPasswordToken -resetPasswordExpire"
+      );
       return sendToken(user, 201, res);
     }
 
@@ -56,7 +58,9 @@ const registerUser = async (req, res) => {
       },
     });
     // If newUser was returned directly it was including the password field
-    const user = await User.findById(newUser._id);
+    const user = await User.findById(newUser._id).select(
+      "-resetPasswordToken -resetPasswordExpire"
+    );
     sendToken(user, 201, res);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -84,7 +88,9 @@ const userLogin = async (req, res) => {
     }
 
     // Returns the user without the password hash
-    const user = await User.findById(doesUserExist._id);
+    const user = await User.findById(doesUserExist._id).select(
+      "-resetPasswordToken -resetPasswordExpire"
+    );
 
     //Logging In
     sendToken(user, 200, res);
@@ -178,7 +184,9 @@ const resetPassword = async (req, res) => {
     await existingUser.save(); //saving user after password change
 
     //returns the user without the password hash
-    const user = await User.findById(existingUser._id);
+    const user = await User.findById(existingUser._id).select(
+      "-resetPasswordToken -resetPasswordExpire"
+    );
     sendToken(user, 200, res);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -188,7 +196,9 @@ const resetPassword = async (req, res) => {
 //Get user details(for logged in users only)
 const getUserDetails = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id);
+    const user = await User.findById(req.user._id).select(
+      "-resetPasswordToken -resetPasswordExpire"
+    );
     return res.status(200).json({
       success: true,
       user,
@@ -227,7 +237,9 @@ const changePassword = async (req, res) => {
     await existingUser.save();
 
     //returns the user without the password hash
-    const user = await User.findById(existingUser._id);
+    const user = await User.findById(existingUser._id).select(
+      "-resetPasswordToken -resetPasswordExpire"
+    );
     sendToken(user, 200, res);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -306,7 +318,7 @@ const searchUser = async (req, res) => {
     const users = await User.find({
       // searches both fields for given keyword
       $or: [{ name: searchKeyword }, { email: searchKeyword }],
-    });
+    }).select("-resetPasswordToken -resetPasswordExpire");
 
     if (users.length === 0) {
       return res.status(404).json({

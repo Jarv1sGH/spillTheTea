@@ -34,7 +34,7 @@ const createChat = async (req, res) => {
 
     existingChat = await User.populate(existingChat, {
       path: "latestMessage.sender",
-      select: "name email",
+      select: "name email aboutMe",
     });
 
     if (existingChat.length > 0) {
@@ -71,7 +71,7 @@ const fetchUserChats = async (req, res) => {
 
     chats = await User.populate(chats, {
       path: "latestMessage.sender",
-      select: "name email",
+      select: "name email aboutMe",
     });
     return res.status(200).json({ success: true, chats });
   } catch (error) {

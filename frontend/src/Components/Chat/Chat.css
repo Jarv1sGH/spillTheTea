@@ -1,0 +1,47 @@
+.chat {
+  display: flex;
+  position: relative;
+  border-radius: 10px;
+  margin: 2px;
+  cursor: pointer;
+}
+.chat:hover {
+  background-color: rgba(144, 144, 144, 0.169);
+}
+.userImage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.userImage > img {
+  border-radius: 50%;
+  width: 55px;
+  height: 55px;
+  padding: 4px;
+}
+.chatInfo {
+  display: flex;
+  align-items: center;
+  width: 80%;
+}
+.lastMsgTime {
+  position: absolute;
+  top: 2px;
+  padding: 10px;
+  right: 0px;
+}
+.chatInfo > div:first-child {
+  padding: 8px;
+}
+.chatInfo > div > p {
+  margin: 0;
+  padding: 2px 0;
+}
+.singleChatWrapper {
+  border-radius: 10px;
+  margin: 2px;
+  cursor: pointer;
+}
+.selected {
+  background: #008ecf;
+}

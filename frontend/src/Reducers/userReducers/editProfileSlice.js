@@ -4,21 +4,17 @@ import axios from "axios";
 
 const options = {
   headers: {
-    "Content-Type": "application/json",
+    "Content-Type": "multipart/form-data",
   },
   validateStatus: (status) => {
     return status >= 200;
   },
 };
 
-export const forgotPassword = createAsyncThunk(
-  "user/forgotPassword",
+export const editProfile = createAsyncThunk(
+  "user/editProfile",
   async (formData) => {
-    const response = await axios.post(
-      `api/v1/password/forgot`,
-      formData,
-      options
-    );
+    const response = await axios.put(`api/v1/me/update`, formData, options);
     if (response.status >= 200 && response.status < 300) {
       // If response status is 2xx, return the data as usual
       return response.data;
@@ -28,35 +24,26 @@ export const forgotPassword = createAsyncThunk(
     }
   }
 );
-export const clearState = () => (dispatch) => {
-  dispatch(forgotPasswordSlice.actions.setState(null));
-};
-const forgotPasswordSlice = createSlice({
-  name: "forgotPassword",
+
+const editProfileSlice = createSlice({
+  name: "editProfile",
   initialState: {
     message: {},
     loading: false,
     error: null,
   },
-  reducers: {
-    setState: (state, action) => {
-      state.error = action.payload;
-      state.message = action.payload;
-    },
-  },
   extraReducers: (builder) => {
     builder
-      .addCase(forgotPassword.pending, (state) => {
+      .addCase(editProfile.pending, (state) => {
         state.loading = true;
       })
-      .addCase(forgotPassword.fulfilled, (state, action) => {
+      .addCase(editProfile.fulfilled, (state, action) => {
         state.message = action.payload;
         state.error = null;
         state.loading = false;
       })
-      .addCase(forgotPassword.rejected, (state, action) => {
+      .addCase(editProfile.rejected, (state, action) => {
         state.loading = false;
-        state.message = null;
         try {
           state.error = JSON.parse(action.error.message);
         } catch (error) {
@@ -66,4 +53,4 @@ const forgotPasswordSlice = createSlice({
   },
 });
 
-export default forgotPasswordSlice.reducer;
+export default editProfileSlice.reducer;

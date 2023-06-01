@@ -1,9 +1,15 @@
 import React from "react";
 import { useState, useRef } from "react";
 import { useDispatch } from "react-redux";
-import { registerUser} from "../../Reducers/userReducers/userSlice";
+import { registerUser } from "../../Reducers/userReducers/userSlice";
 const SignUpForm = () => {
   const dispatch = useDispatch();
+  const [passwordInputType, setPasswordInputType] = useState("password");
+  const showPassword = () => {
+    setPasswordInputType((prevType) =>
+      prevType === "password" ? "text" : "password"
+    );
+  };
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -29,12 +35,12 @@ const SignUpForm = () => {
     e.preventDefault();
     dispatch(registerUser(formData));
   };
+
   return (
     <div className=" formContainer signUp">
       <form onSubmit={signUpFormSubmit}>
         <h1>Sign Up</h1>
         <label>
-          <i className="fa-solid fa-user"></i>
           <input
             type="text"
             name="name"
@@ -48,7 +54,6 @@ const SignUpForm = () => {
           />
         </label>
         <label>
-          <i className="fa-solid fa-envelope"></i>
           <input
             type="email"
             name="email"
@@ -60,10 +65,9 @@ const SignUpForm = () => {
           />
         </label>
         <label>
-          <i className="fa-solid fa-lock"></i>
           <input
             name="password"
-            type="password"
+            type={passwordInputType}
             pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}"
             placeholder="Password*"
             value={formData.password}
@@ -72,13 +76,22 @@ const SignUpForm = () => {
             autoComplete="off"
             title="password must be Alpha-Numeric, 8+ characters long and contain atleast 1 special character."
           />
+          <div className="eyeIcon">
+            <i
+              onClick={showPassword}
+              className={
+                passwordInputType === "password"
+                  ? "fa-solid fa-eye"
+                  : "fa-solid fa-eye-slash"
+              }
+            ></i>
+          </div>
         </label>
         <p id="passwordCriteria">
           (password must be Alpha-Numeric, 8+ characters long and contain 1
           special character.)
         </p>
         <label>
-          <i className="fa-regular fa-image"></i>
           <input
             type="file"
             name="profilePic"

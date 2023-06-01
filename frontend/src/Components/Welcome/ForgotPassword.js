@@ -1,13 +1,17 @@
 import React from "react";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { forgotPassword } from "../../Reducers/userReducers/forgotPasswordSlice";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  forgotPassword,
+  clearState,
+} from "../../Reducers/userReducers/forgotPasswordSlice";
 const ForgotPassword = (props) => {
+  const { message, error } = useSelector((state) => state.forgotPassword);
   const [formData, setFormData] = useState({
     email: "",
   });
   const dispatch = useDispatch();
-  const { setShowForgotPassword } = props;
+  const { setShowForgotPassword, notify } = props;
   const onClickHandler = () => {
     setShowForgotPassword(false);
   };
@@ -22,6 +26,22 @@ const ForgotPassword = (props) => {
     e.preventDefault();
     dispatch(forgotPassword(formData));
   };
+
+  useEffect(() => {
+    if (message?.message) {
+      notify(message.message);
+    }
+    if (error?.error) {
+      notify(error?.error);
+    }
+  }, [message, notify, error]);
+
+  useEffect(() => {
+    return () => {
+      // Reset the error state when component is unmounted or hidden to avoid multiple toasts of same error
+      dispatch(clearState());
+    };
+  }, [dispatch]);
   return (
     <div className=" formContainer signIn">
       <button id="backBtn" onClick={onClickHandler}>

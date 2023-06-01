@@ -8,6 +8,10 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
+  background-image: url("../../images/background/bakcground.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
 }
 
 #welcomeText {
@@ -73,11 +77,12 @@ p {
   text-align: center;
 }
 .formContainer label {
+  position: relative;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  width: 100%;
+  width: 60%;
 }
 .formContainer input {
   background: #eee;
@@ -85,9 +90,13 @@ p {
   border-radius: 10px;
   padding: 12px 15px;
   margin: 8px 0;
-  width: 60%;
+  width: 100%;
 }
 
+.eyeIcon {
+  position: absolute;
+  right: 0px;
+}
 .formContainer input:hover {
   transform: scale(102%);
 }
@@ -269,7 +278,7 @@ button.ghost {
   p {
     display: none;
   }
-  #forgotPasswordText{
+  #forgotPasswordText {
     display: block;
   }
   button {
