@@ -1,15 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-
-const options = {
-  headers: {
-    "Content-Type": "application/json",
-  },
-  validateStatus: (status) => {
-    return status >= 200;
-  },
-};
+import {options} from "../../chatLogic";
 
 export const fetchAllChats = createAsyncThunk(
   "chats/fetchAllChats",
