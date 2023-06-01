@@ -49,7 +49,7 @@ const Chat = (props) => {
           <p>
             {chat?.latestMessage?.sender?._id === user?.user?._id
               ? "You: "
-              : chat.isGroupChat && chat?.latestMessage?.sender?.name + ": "}
+              : chat.isGroupChat && chat?.latestMessage &&  chat?.latestMessage?.sender?.name + ": "}
 
             {chat?.latestMessage?.message.slice(0, 20)}
             {chat?.latestMessage?.message.length > 20 && "..."}
