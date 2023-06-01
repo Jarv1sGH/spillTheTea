@@ -1,6 +1,8 @@
 const Chat = require("../models/chatModel");
 const User = require("../models/userModel");
 const { isValidObjectId } = require("mongoose");
+const cloudinary = require("cloudinary");
+const fs = require("fs");
 
 // creating a chat or fetching existing chat if it exists.
 const createChat = async (req, res) => {
@@ -92,6 +94,7 @@ const createGroupChat = async (req, res) => {
     }
     // parsing stringified user array from frontend
     let users = JSON.parse(req.body.users);
+    const file = req.files?.groupIcon;
     // if users array has only one user beside the creator of the groupChat.
     if (users.length < 2) {
       return res
@@ -99,17 +102,52 @@ const createGroupChat = async (req, res) => {
         .send("More than 2 users are required to form a group chat");
     }
     users.push(req.user);
+
+    // if a group Icon is not provided in the req , group is created with the default icon
+    if (!file) {
+      const groupChatData = await Chat.create({
+        chatName: req.body.chatName,
+        users,
+        isGroupChat: true,
+        groupAdmin: req.user,
+      });
+
+      const groupChat = await Chat.findOne({ _id: groupChatData._id })
+        .populate("users", "-resetPasswordToken -resetPasswordExpire")
+        .populate("groupAdmin", "-resetPasswordToken -resetPasswordExpire");
+
+      res.status(200).json({ success: true, groupChat });
+    }
+
+    //creating Group chat with icon
+    const myCloud = await cloudinary.v2.uploader.upload(file.tempFilePath, {
+      folder: "profilePics",
+      width: 150,
+      crop: "scale",
+    });
+
+    // deleting the temporary file
+    fs.unlink(file.tempFilePath, (err) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      console.log("Temporary file deleted");
+    });
     const groupChatData = await Chat.create({
       chatName: req.body.chatName,
       users,
       isGroupChat: true,
       groupAdmin: req.user,
+      groupIcon: {
+        public_id: myCloud.public_id,
+        url: myCloud.secure_url,
+      },
     });
 
     const groupChat = await Chat.findOne({ _id: groupChatData._id })
       .populate("users", "-resetPasswordToken -resetPasswordExpire")
       .populate("groupAdmin", "-resetPasswordToken -resetPasswordExpire");
-
     res.status(200).json({ success: true, groupChat });
   } catch (error) {
     res.status(500).json({ error: error.message });

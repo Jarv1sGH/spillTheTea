@@ -44,7 +44,7 @@ const userSchema = new Schema(
       public_id: {
         type: String,
         required: true,
-        default: "profilePics/cocfn4hrceqt4rzdcsx3",
+        default: "profilePics/uppdonwxhjgfayfpzh2i",
       },
       url: {
         type: String,

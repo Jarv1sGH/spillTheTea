@@ -22,11 +22,25 @@ const chatSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    groupIcon: {
+      public_id: {
+        type: String,
+        required: true,
+        default: "profilePics/groupIcon_gv7ks7",
+      },
+      url: {
+        type: String,
+        required: true,
+        default:
+          "https://res.cloudinary.com/dz8mx0clv/image/upload/v1685636865/profilePics/groupIcon_gv7ks7.jpg",
+      },
+    },
     groupAdmin: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
   },
+
   { timestamps: true }
 );
 
