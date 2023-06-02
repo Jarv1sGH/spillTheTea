@@ -155,12 +155,15 @@ const createGroupChat = async (req, res) => {
 };
 
 // Rename a group chat
-const renameGroupChat = async (req, res) => {
+const updateGroupChat = async (req, res) => {
   try {
     const { chatId, chatName } = req.body;
-    if (!chatName || !chatId) {
+    const updatedGroupChatData = {
+      chatName,
+    };
+    if (!chatId) {
       return res.status(400).json({
-        error: "please provide the new groupchat name and and group chat id",
+        error: "please provide the chat id",
       });
     }
     const groupChat = await Chat.findOne({ _id: chatId });
@@ -177,13 +180,40 @@ const renameGroupChat = async (req, res) => {
         .json({ error: "Only admin can change group name" });
     }
 
+    // if the request contains image file to update groupIcon
+    if (req?.files?.groupIcon && req.files.groupIcon.size > 0) {
+      const imageId = groupChat.groupIcon.public_id;
+      if (imageId !== "profilePics/groupIcon_gv7ks7") {
+        await cloudinary.v2.uploader.destroy(imageId);
+      }
+      const file = req.files.groupIcon;
+      const myCloud = await cloudinary.v2.uploader.upload(file.tempFilePath, {
+        folder: "profilePics",
+        width: 150,
+        crop: "scale",
+      });
+      // deleting the temporary file
+      fs.unlink(file.tempFilePath, (err) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        console.log("Temporary file deleted");
+      });
+      updatedGroupChatData.groupIcon = {
+        public_id: myCloud.public_id,
+        url: myCloud.secure_url,
+      };
+    }
+
     const updatedGroupChat = await Chat.findByIdAndUpdate(
       chatId,
-      {
-        chatName,
-      },
+      updatedGroupChatData,
+
       {
         new: true, //without this it just returns the old value
+        runValidators: true,
+        useFindAndModify: false,
       }
     )
       .populate("users", "-resetPasswordToken -resetPasswordExpire")
@@ -194,7 +224,7 @@ const renameGroupChat = async (req, res) => {
     }
     res.status(200).json({
       success: true,
-      message: "Group name updated successfully",
+      message: "Group updated successfully",
       updatedGroupChat,
     });
   } catch (error) {
@@ -350,7 +380,7 @@ module.exports = {
   createChat,
   fetchUserChats,
   createGroupChat,
-  renameGroupChat,
+  updateGroupChat,
   deleteGroupChat,
   addUserToGroup,
   removeUserFromGroup,
