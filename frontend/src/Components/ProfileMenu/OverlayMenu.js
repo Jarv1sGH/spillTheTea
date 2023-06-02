@@ -64,9 +64,16 @@ const OverlayMenu = ({ innerRef, settingsActive, notify }) => {
           </div>
           <div className="userInfo">
             <p>{user?.user?.name}</p>
-            <p> <i className="fa-solid fa-envelope"></i> {user?.user?.email}</p>
+            <p>
+              {" "}
+              <i className="fa-solid fa-envelope blueIcon"></i>{" "}
+              {user?.user?.email}
+            </p>
             <div className="aboutMe">
-              <span> <i style = {{color:"white"}} className="fa-solid fa-address-card"></i> About Me</span>
+              <span>
+                {" "}
+                <i className="fa-solid fa-address-card blueIcon"></i> About Me
+              </span>
               <p>
                 {user?.user?.aboutMe
                   ? user?.user?.aboutMe

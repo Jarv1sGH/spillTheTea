@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./ChatInfo.css";
 import { useSelector } from "react-redux";
+import { setChatDetails } from "../../chatLogic";
 const ChatInfo = (props) => {
   const { user } = useSelector((state) => state.user);
-  const { selectedChat, avatar, chatName, setShowChatInfo } = props;
+  const { selectedChat, setShowChatInfo, modal } = props;
+  const [avatar, setAvatar] = useState(null);
+  const [chatName, setChatName] = useState(null);
   let chatUserEmail, chatUserAbout;
   if (user?.user?.email === selectedChat?.users?.[0]?.email) {
     chatUserEmail = selectedChat?.users?.[1]?.email;
@@ -22,9 +25,22 @@ const ChatInfo = (props) => {
       isUserGroupAdmin = true;
     }
   }
+  const showModal = () => {
+    modal.current.showModal();
+  };
+  useEffect(() => {
+    const { chatName, avatar } = setChatDetails(selectedChat, user);
+    setChatName(chatName);
+    setAvatar(avatar);
+  }, [selectedChat, user]);
+
   return (
     <div className="chatInfoContainer">
-      <i onClick={closeChatInfoHandler} className="fa-solid fa-xmark"></i>
+      <i
+        title="close"
+        onClick={closeChatInfoHandler}
+        className="fa-solid fa-xmark"
+      ></i>
       <div className="chatUserInfo">
         <div className="chatIcon">
           <img src={avatar} alt="" />
@@ -36,13 +52,13 @@ const ChatInfo = (props) => {
             </div>
             <div className="idkWhatToNameThisDiv">
               <p>
-                <i className="fa-solid fa-envelope"></i> Email
+                <i className="fa-solid fa-envelope blueIcon"></i> Email
               </p>
               <h3>{chatUserEmail}</h3>
             </div>
             <div className="idkWhatToNameThisDiv">
               <p>
-                <i className="fa-solid fa-address-card"></i> About
+                <i className="fa-solid fa-address-card blueIcon"></i> About
               </p>
               <h3>{chatUserAbout}</h3>
             </div>
@@ -50,23 +66,31 @@ const ChatInfo = (props) => {
         ) : (
           <div className="groupChatInfo">
             <div className="chatName">
-              <h2>{chatName}</h2>
+              <h2>{chatName} </h2>
             </div>
             <div className="groupChatMembers">
               <p>
-                Members <i className="fa-solid fa-users"></i>
+                Members <i className="fa-solid fa-users blueIcon"></i>
               </p>
               {selectedChat?.users &&
                 selectedChat?.users.map((user) => (
                   <div key={user?._id} className="member">
                     <img src={user?.profilePic?.url} alt="" />
                     <div>
-                      <p>{user?.name}</p>
+                      <p>
+                        {user?.name}{" "}
+                        {selectedChat?.groupAdmin?._id === user?._id && (
+                          <span id="admin">admin</span>
+                        )}
+                      </p>
                       <p>{user?.email}</p>
                     </div>
                   </div>
                 ))}
             </div>
+            {isUserGroupAdmin && (
+              <button onClick={showModal}>Edit Group</button>
+            )}
           </div>
         )}
       </div>

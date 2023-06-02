@@ -8,6 +8,7 @@ import allChatsReducer from "./Reducers/chatReducers/allChatsSlice";
 import messagesReducer from "./Reducers/chatReducers/fetchMessagesSlice";
 import sendMessageReducer from "./Reducers/chatReducers/sendMessageSlice";
 import newChatReducer from "./Reducers/chatReducers/newChatSlice";
+import editGroupChatReducer from "./Reducers/chatReducers/editGroupChatSlice";
 
 const store = configureStore({
   reducer: {
@@ -20,6 +21,7 @@ const store = configureStore({
     chatData: sendMessageReducer,
     search: searchSliceReducer,
     newChat: newChatReducer,
+    updatedGroupChat: editGroupChatReducer,
   },
 });
 

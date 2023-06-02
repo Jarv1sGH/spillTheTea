@@ -1,3 +1,4 @@
+import { setChatDetails } from "../../chatLogic";
 import React, { useState, useRef, useEffect } from "react";
 import "./ChatRoom.css";
 import { useSelector, useDispatch } from "react-redux";
@@ -12,15 +13,10 @@ const ChatRoom = (props) => {
   const dispatch = useDispatch();
   const inputRef = useRef();
   const [messagesArr, setMessagesArr] = useState([]);
+  const [avatar, setAvatar] = useState(null);
+  const [chatName, setChatName] = useState(null);
   const [socket, setSocket] = useState(null);
-  const {
-    avatar,
-    chatName,
-    selectedChat,
-    setShowChatInfo,
-    showChatInfo,
-    notify,
-  } = props;
+  const { selectedChat, setShowChatInfo, showChatInfo, notify } = props;
   const { messages, loading } = useSelector((state) => state.messages);
   const { user } = useSelector((state) => state.user);
   const [message, setMessage] = useState({
@@ -113,6 +109,12 @@ const ChatRoom = (props) => {
     }
   }, [socket, notify]);
 
+  useEffect(() => {
+    const { chatName, avatar } = setChatDetails(selectedChat, user);
+    setChatName(chatName);
+    setAvatar(avatar);
+  }, [selectedChat, user]);
+
   return (
     <>
       <div>
@@ -120,6 +122,7 @@ const ChatRoom = (props) => {
           <img src={avatar} alt="error" className="friendAvatar" />
           <p>{chatName}</p>
           <i
+            title="Chat Info"
             onClick={showChatInfoHandler}
             className="fa-solid fa-circle-info"
           ></i>

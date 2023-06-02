@@ -1,19 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import "./Chat.css";
 import { setChatDetails } from "../../chatLogic";
 
 const Chat = (props) => {
-  const { setShowChatRoom, chat, setAvatar, setChatName, setSelectedChat } =
-    props;
+  const { setShowChatRoom, chat, setSelectedChat } = props;
   const { user } = useSelector((state) => state.user);
+  const { updatedGroupChat } = useSelector((state) => state.updatedGroupChat);
   const chatRoomActive = () => {
     setShowChatRoom(true);
     setSelectedChat(chat);
-    const { chatName, avatar } = setChatDetails(chat, user);
-    setChatName(chatName);
-    setAvatar(avatar);
   };
+
+  useEffect(() => {
+    if (updatedGroupChat.success === true) {
+      setSelectedChat(updatedGroupChat.updatedGroupChat);
+    }
+  }, [updatedGroupChat,setSelectedChat]);
 
   // this is for the chatName and icon of the all the individual chats.
   let singleChatName, singleChatAvatar;
@@ -49,7 +52,9 @@ const Chat = (props) => {
           <p>
             {chat?.latestMessage?.sender?._id === user?.user?._id
               ? "You: "
-              : chat.isGroupChat && chat?.latestMessage &&  chat?.latestMessage?.sender?.name + ": "}
+              : chat.isGroupChat &&
+                chat?.latestMessage &&
+                chat?.latestMessage?.sender?.name + ": "}
 
             {chat?.latestMessage?.message.slice(0, 20)}
             {chat?.latestMessage?.message.length > 20 && "..."}

@@ -154,7 +154,7 @@ const createGroupChat = async (req, res) => {
   }
 };
 
-// Rename a group chat
+// update a group chat
 const updateGroupChat = async (req, res) => {
   try {
     const { chatId, chatName } = req.body;

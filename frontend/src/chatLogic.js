@@ -7,7 +7,7 @@ export const options = {
   },
 };
 export const setChatDetails = (chat, user) => {
-  if (chat.isGroupChat === true) {
+  if (chat?.isGroupChat === true) {
     return {
       chatName: chat?.chatName,
       avatar: chat?.groupIcon.url,

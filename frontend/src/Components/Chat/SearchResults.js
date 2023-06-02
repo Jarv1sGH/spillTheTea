@@ -6,7 +6,6 @@ const SearchResults = (props) => {
   const { setShowSearchResults } = props;
   const dispatch = useDispatch();
   const { error, usersArr, loading } = useSelector((state) => state.search);
-  // const { newChat, reloadChatList } = useSelector((state) => state.newChat);
   const { user } = useSelector((state) => state.user);
   let userId = user?.user?._id;
   const [recipientId, setRecipientId] = useState("");
@@ -19,7 +18,7 @@ const SearchResults = (props) => {
     }
     dispatch(newChatCreator(recipientId));
     setShowSearchResults(false);
-  }, [dispatch, recipientId]);
+  }, [dispatch, recipientId,setShowSearchResults]);
   return (
     <div className="searchResults">
       {Object.keys(usersArr).length === 0 && error === null && (

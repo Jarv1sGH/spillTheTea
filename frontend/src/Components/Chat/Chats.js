@@ -10,6 +10,7 @@ import ChatInfo from "./ChatInfo";
 import Loader from "../Loader/Loader";
 import { searchUsers } from "../../Reducers/userReducers/searchSlice";
 import SearchResults from "./SearchResults";
+import EditGroupModal from "../Modal/EditGroupModal";
 
 const Chats = ({ notify }) => {
   const navigate = useNavigate();
@@ -17,11 +18,10 @@ const Chats = ({ notify }) => {
   const [showChatRoom, setShowChatRoom] = useState(false);
   const [selectedChat, setSelectedChat] = useState(null);
   const [settingsActive, setSettingsActive] = useState(false);
-  const [avatar, setAvatar] = useState(null);
-  const [chatName, setChatName] = useState(null);
   const [showChatInfo, setShowChatInfo] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [showSearchResults, setShowSearchResults] = useState(false);
+  const { updatedGroupChat } = useSelector((state) => state.updatedGroupChat);
   const { newChat, reloadChatList, error } = useSelector(
     (state) => state.newChat
   );
@@ -49,7 +49,7 @@ const Chats = ({ notify }) => {
     }
   };
 
-  // listens for click outside the profile menu and closes it. 
+  // listens for click outside the profile menu and closes it.
   useEffect(() => {
     document.addEventListener("click", handleClickOutsideMenu);
     return () => {
@@ -77,7 +77,7 @@ const Chats = ({ notify }) => {
     if (newChat?.existingChat) {
       notify("A chat with user already exists ");
     }
-  }, [dispatch, reloadChatList, newChat, notify, error]);
+  }, [dispatch, reloadChatList, newChat, notify, error, updatedGroupChat]);
 
   // sets the search query for searchUsers function
   const searchQueryHandler = (e) => {
@@ -115,12 +115,24 @@ const Chats = ({ notify }) => {
     }
   }, [notify, message]);
 
+  const modalRef = useRef(null);
+  // const modal = document.querySelector("[data-modal]");
   return (
     <>
       {loading ? (
         <Loader />
       ) : (
         <div className="chatsOuterContainer">
+          {selectedChat && (
+            <dialog ref={modalRef} className="groupChatModal" data-modal>
+              <EditGroupModal
+                modal={modalRef}
+                selectedChat={selectedChat}
+                notify={notify}
+              />
+              {/* <i className="fa-solid fa-xmark blueIcon"></i> */}
+            </dialog>
+          )}
           {
             <OverlayMenu
               notify={notify}
@@ -131,20 +143,28 @@ const Chats = ({ notify }) => {
           <div className="chatsInnerWrapper">
             <div className="sideMenu">
               <i
+                title="Click me"
                 onClick={() => {
                   notify("Clickity Click");
                 }}
                 className="fa-regular fa-comment-dots"
               ></i>
               <div onClick={settingsHandler} className="myProfile">
-                <img src={user?.user?.profilePic?.url} alt="userProfile" />
+                <img
+                  title="my profile"
+                  src={user?.user?.profilePic?.url}
+                  alt="userProfile"
+                />
               </div>
             </div>
             <div className="chatsInnerContainer">
               <div className="chatNames">
                 <div>
                   <h1>Chats</h1>
-                  <i className="fa-solid fa-pen-to-square"></i>
+                  <i
+                    title="create group chat"
+                    className="fa-solid fa-pen-to-square"
+                  ></i>
                 </div>
                 <div className="searchContainer" ref={searchRef}>
                   <div className="textInputWrapper">
@@ -183,11 +203,7 @@ const Chats = ({ notify }) => {
                       >
                         <Chat
                           chat={item}
-                          showChatRoom={showChatRoom}
                           setShowChatRoom={setShowChatRoom}
-                          setChatName={setChatName}
-                          setAvatar={setAvatar}
-                          chatName={chatName}
                           setSelectedChat={setSelectedChat}
                         />
                       </div>
@@ -203,8 +219,6 @@ const Chats = ({ notify }) => {
                   }
                 >
                   <ChatRoom
-                    avatar={avatar}
-                    chatName={chatName}
                     selectedChat={selectedChat}
                     setShowChatInfo={setShowChatInfo}
                     showChatInfo={showChatInfo}
@@ -223,10 +237,9 @@ const Chats = ({ notify }) => {
 
               {showChatInfo && showChatRoom && (
                 <ChatInfo
-                  avatar={avatar}
-                  chatName={chatName}
                   selectedChat={selectedChat}
                   setShowChatInfo={setShowChatInfo}
+                  modal={modalRef}
                 />
               )}
             </div>
