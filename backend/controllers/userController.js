@@ -261,12 +261,11 @@ const updateProfile = async (req, res) => {
       const user = await User.findById(req.user._id);
 
       const imageId = user.profilePic.public_id;
-
-      await cloudinary.v2.uploader.destroy(imageId);
-      const file = req.files.profilePic;
-      if (!file) {
-        return res.status(400).json({ error: "Please upload a profile pic" });
+      // if the profile pic is not the defualt one it deletes it
+      if (imageId !== "profilePics/uppdonwxhjgfayfpzh2i") {
+        await cloudinary.v2.uploader.destroy(imageId);
       }
+      const file = req.files.profilePic;
       const myCloud = await cloudinary.v2.uploader.upload(file.tempFilePath, {
         folder: "profilePics",
         width: 150,
