@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import "./OverlayMenu.css";
 import { useSelector, useDispatch } from "react-redux";
 import { logoutUser } from "../../Reducers/userReducers/userSlice";
+import { clearSelectedChat } from "../../Reducers/chatReducers/selectedChatSlice";
 import UpdatePasswordForm from "./UpdatePasswordForm";
 import EditProfileForm from "./EditProfileForm";
-
-const OverlayMenu = ({ innerRef, settingsActive, notify }) => {
+import { toast } from "react-toastify";
+const OverlayMenu = ({ innerRef, settingsActive }) => {
   const dispatch = useDispatch();
   const { user, message } = useSelector((state) => state.user);
   const [profileActive, setProfileActive] = useState(true);
@@ -16,13 +17,14 @@ const OverlayMenu = ({ innerRef, settingsActive, notify }) => {
   };
   const logoutHandler = () => {
     dispatch(logoutUser());
+    dispatch(clearSelectedChat());
   };
 
   useEffect(() => {
     if (window.location.pathname === "/") {
-      notify(message?.message);
+      toast(message?.message);
     }
-  }, [notify, message]);
+  }, [message]);
 
   return (
     <div
@@ -86,11 +88,11 @@ const OverlayMenu = ({ innerRef, settingsActive, notify }) => {
 
       {/* edit profile form */}
 
-      {listOption === "editProfile" && <EditProfileForm notify={notify} />}
+      {listOption === "editProfile" && <EditProfileForm />}
 
       {/* Update Password form */}
 
-      {listOption === "password" && <UpdatePasswordForm notify={notify} />}
+      {listOption === "password" && <UpdatePasswordForm />}
     </div>
   );
 };

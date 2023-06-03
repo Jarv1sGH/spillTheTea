@@ -4,8 +4,8 @@ import {
   updatePassword,
   clearError,
 } from "../../Reducers/userReducers/updatePasswordSlice";
-
-const UpdatePasswordForm = ({ notify }) => {
+import { toast } from "react-toastify";
+const UpdatePasswordForm = () => {
   const dispatch = useDispatch();
   const { error, message } = useSelector((state) => state.updatePassword);
   const [passwordInputType, setPasswordInputType] = useState({
@@ -38,12 +38,12 @@ const UpdatePasswordForm = ({ notify }) => {
 
   useEffect(() => {
     if (error?.error) {
-      notify(error?.error);
+      toast(error?.error);
     }
     if (message?.success === true) {
-      notify("Password Changed Successfully");
+      toast("Password Changed Successfully");
     }
-  }, [error, notify, message]);
+  }, [error,message]);
 
   // clears error when component is unmounted to avoid multiple same toasts
   useEffect(() => {

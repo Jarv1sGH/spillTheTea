@@ -1,14 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./ChatInfo.css";
+import { toast } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
 import { setChatDetails } from "../../chatLogic";
 import { removeUser } from "../../Reducers/chatReducers/editGroupChatSlice";
 import ConfirmChoiceModal from "../Modal/ConfirmChoiceModal";
+import EditGroupModal from "../Modal/EditGroupModal";
 const ChatInfo = (props) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
-  const { selectedChat, setShowChatInfo, modal, notify, setShowChatRoom } =
-    props;
+  const { setShowChatInfo, setShowChatRoom } = props;
+  const { selectedChat } = useSelector((state) => state.selectedChat);
   const [avatar, setAvatar] = useState(null);
   const [chatName, setChatName] = useState(null);
 
@@ -21,6 +23,7 @@ const ChatInfo = (props) => {
     chatId: selectedChat?._id,
   });
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const modalRef = useRef(null);
   const choiceModalRef = useRef(null);
   const loggedInUserId = user?.user?._id;
   let chatUserEmail, chatUserAbout;
@@ -43,7 +46,7 @@ const ChatInfo = (props) => {
   }
 
   const showModal = () => {
-    modal.current.showModal();
+    modalRef.current.showModal();
   };
 
   const showChoiceModal = () => {
@@ -76,23 +79,26 @@ const ChatInfo = (props) => {
     dispatch(removeUser(removeUserData)).then((action) => {
       const updatedData = action.payload;
       if (updatedData.success === true) {
-        notify(updatedData.message);
+        toast(updatedData.message);
         choiceModalRef.current.close();
       }
     });
-  }, [removeUserData, dispatch, notify]);
+  }, [removeUserData, dispatch]);
 
   return (
     <div className="chatInfoContainer">
       {selectedChat && (
+        <dialog ref={modalRef} className="groupChatModal">
+          <EditGroupModal modalRef={modalRef} />
+        </dialog>
+      )}
+      {selectedChat && (
         <dialog ref={choiceModalRef} className="confirmChoiceModal">
           <ConfirmChoiceModal
             choiceModal={choiceModalRef}
-            notify={notify}
             showDeleteModal={showDeleteModal}
             setRemoveUserData={setRemoveUserData}
             removeUserId={removeUserId}
-            selectedChat={selectedChat}
             setShowChatRoom={setShowChatRoom}
           />
         </dialog>

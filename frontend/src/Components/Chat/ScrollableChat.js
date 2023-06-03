@@ -2,7 +2,8 @@ import React from "react";
 import { useSelector } from "react-redux";
 const ScrollableChat = (props) => {
   const { user } = useSelector((state) => state.user);
-  const { chatName, messagesArr, selectedChat } = props;
+  const { selectedChat } = useSelector((state) => state.selectedChat);
+  const { chatName, messagesArr } = props;
 
   return (
     <div className="chatRoomInner">

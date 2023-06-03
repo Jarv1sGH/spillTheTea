@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import "./EditGroupModal.css";
-import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
 import { deleteGroupChat } from "../../Reducers/chatReducers/deleteGroupChatSlice";
 const ConfirmChoiceModal = (props) => {
+  const { selectedChat } = useSelector((state) => state.selectedChat);
   const {
     choiceModal,
     showDeleteModal,
     removeUserId,
     setRemoveUserData,
-    selectedChat,
     setShowChatRoom,
-    notify,
   } = props;
 
   const [deletionData, setDeletionData] = useState({
@@ -33,7 +33,7 @@ const ConfirmChoiceModal = (props) => {
       const response = action.payload;
       choiceModal.current.close();
       setShowChatRoom(false);
-      notify(response.message);
+      toast(response.message);
     });
   };
 

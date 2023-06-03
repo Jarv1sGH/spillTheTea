@@ -3,11 +3,12 @@ import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser, clearErrors } from "../../Reducers/userReducers/userSlice";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 const SignInForm = (props) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { error } = useSelector((state) => state.user);
-  const { setShowForgotPassword, notify } = props;
+  const { setShowForgotPassword } = props;
   const [passwordInputType, setPasswordInputType] = useState("password");
   const showPassword = () => {
     setPasswordInputType((prevType) =>
@@ -36,11 +37,11 @@ const SignInForm = (props) => {
   useEffect(() => {
     if (prevErrorRef.current !== error?.error) {
       if (error?.error) {
-        notify(error.error);
+        toast(error.error);
       }
       prevErrorRef.current = error?.error;
     }
-  }, [error, notify]);
+  }, [error]);
 
   //clear errors when component is unmounted to prevent multiple same error toasts
   useEffect(() => {

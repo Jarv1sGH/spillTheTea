@@ -18,7 +18,7 @@ const SearchResults = (props) => {
     }
     dispatch(newChatCreator(recipientId));
     setShowSearchResults(false);
-  }, [dispatch, recipientId,setShowSearchResults]);
+  }, [dispatch, recipientId, setShowSearchResults]);
   return (
     <div className="searchResults">
       {Object.keys(usersArr).length === 0 && error === null && (

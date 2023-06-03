@@ -5,14 +5,11 @@ import { useEffect } from "react";
 import Chats from "./Components/Chat/Chats";
 import { useDispatch, useSelector } from "react-redux";
 import { loadUser } from "./Reducers/userReducers/userSlice";
-// import Loader from "./Components/Loader/Loader";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const dispatch = useDispatch();
-  const notify = (toastMsg) => toast(toastMsg);
-  // const { loading } = useSelector((state) => state.user);
   const { message } = useSelector((state) => state.editProfile);
   useEffect(() => {
     //Loads the currently logged-In user
@@ -24,15 +21,15 @@ function App() {
     if (message?.success === true) {
       dispatch(loadUser());
     }
-    notify(message?.message);
+    toast(message?.message);
   }, [message, dispatch]);
 
   return (
     <>
       <Router>
         <Routes>
-          <Route exact path="/" element={<Welcome notify={notify} />} />
-          <Route exact path="/chats" element={<Chats notify={notify} />} />
+          <Route exact path="/" element={<Welcome />} />
+          <Route exact path="/chats" element={<Chats />} />
         </Routes>
         <ToastContainer
           position="bottom-center"

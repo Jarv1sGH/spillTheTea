@@ -3,9 +3,12 @@ import "./EditGroupModal.css";
 import { useDispatch, useSelector } from "react-redux";
 import { editGroupChat } from "../../Reducers/chatReducers/editGroupChatSlice";
 import Loader from "../Loader/Loader";
-const EditGroupModal = ({ modal, selectedChat, notify }) => {
+import { toast } from "react-toastify";
+
+const EditGroupModal = ({ modalRef }) => {
   const dispatch = useDispatch();
   const { loading } = useSelector((state) => state.updatedGroupChat);
+  const { selectedChat } = useSelector((state) => state.selectedChat);
   const [formData, setFormData] = useState({
     chatId: selectedChat?._id,
     chatName: selectedChat?.chatName,
@@ -26,7 +29,7 @@ const EditGroupModal = ({ modal, selectedChat, notify }) => {
     });
   };
   const closeModal = () => {
-    modal.current.close();
+    modalRef.current.close();
   };
 
   const groupChatUpdater = (e) => {
@@ -35,13 +38,13 @@ const EditGroupModal = ({ modal, selectedChat, notify }) => {
       formData.chatName === "" &&
       fileInputRef.current.files[0] === undefined
     ) {
-      return notify("No changes made");
+      return toast("No changes made");
     }
     dispatch(editGroupChat(formData)).then((action) => {
       const updatedData = action.payload;
       if (updatedData.success === true) {
-        modal.current.close();
-        notify(updatedData.message);
+        modalRef.current.close();
+        toast(updatedData.message);
       }
     });
   };

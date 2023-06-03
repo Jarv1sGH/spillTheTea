@@ -1,6 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 import {
   forgotPassword,
   clearState,
@@ -11,7 +12,7 @@ const ForgotPassword = (props) => {
     email: "",
   });
   const dispatch = useDispatch();
-  const { setShowForgotPassword, notify } = props;
+  const { setShowForgotPassword } = props;
   const onClickHandler = () => {
     setShowForgotPassword(false);
   };
@@ -29,12 +30,12 @@ const ForgotPassword = (props) => {
 
   useEffect(() => {
     if (message?.message) {
-      notify(message.message);
+      toast(message.message);
     }
     if (error?.error) {
-      notify(error?.error);
+      toast(error?.error);
     }
-  }, [message, notify, error]);
+  }, [message, error]);
 
   useEffect(() => {
     return () => {

@@ -7,7 +7,7 @@ import ForgotPassword from "./ForgotPassword";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Loader from "../Loader/Loader";
-const Welcome = ({ notify }) => {
+const Welcome = () => {
   const navigate = useNavigate();
   const { isAuthenticated, loading } = useSelector((state) => state.user);
   const [overlay, setOverlay] = useState(false);
@@ -51,21 +51,17 @@ const Welcome = ({ notify }) => {
                 : "LoginSignContainer "
             }
           >
-            <SignUpForm notify={notify} />
+            <SignUpForm />
             {/* // Added another state check as SignInForm was clearing the error state for SignUpForm as well, this 
             way SignInform gets unmounted and doesn't interfere with SignUpForm */}
             {showLoginForm && (
               <>
                 {showForgotPassword ? (
                   <ForgotPassword
-                    notify={notify}
                     setShowForgotPassword={setShowForgotPassword}
                   />
                 ) : (
-                  <SignInForm
-                    notify={notify}
-                    setShowForgotPassword={setShowForgotPassword}
-                  />
+                  <SignInForm setShowForgotPassword={setShowForgotPassword} />
                 )}
               </>
             )}

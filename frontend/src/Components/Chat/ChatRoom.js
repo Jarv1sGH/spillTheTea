@@ -1,4 +1,3 @@
-import { setChatDetails } from "../../chatLogic";
 import React, { useState, useRef, useEffect } from "react";
 import "./ChatRoom.css";
 import { useSelector, useDispatch } from "react-redux";
@@ -6,6 +5,8 @@ import { sendMessage } from "./../../Reducers/chatReducers/sendMessageSlice";
 import Loader from "../Loader/Loader";
 import { fetchMessages } from "../../Reducers/chatReducers/fetchMessagesSlice";
 import ScrollableChat from "./ScrollableChat";
+import { setChatDetails } from "../../chatLogic";
+import { toast } from "react-toastify";
 import io from "socket.io-client";
 const ENDPOINT = "http://localhost:4000";
 let selectedChatCompare;
@@ -16,8 +17,9 @@ const ChatRoom = (props) => {
   const [avatar, setAvatar] = useState(null);
   const [chatName, setChatName] = useState(null);
   const [socket, setSocket] = useState(null);
-  const { selectedChat, setShowChatInfo, showChatInfo, notify } = props;
+  const { setShowChatInfo, showChatInfo } = props;
   const { messages, loading } = useSelector((state) => state.messages);
+  const { selectedChat } = useSelector((state) => state.selectedChat);
   const { user } = useSelector((state) => state.user);
   const [message, setMessage] = useState({
     messageContent: "",
@@ -74,7 +76,7 @@ const ChatRoom = (props) => {
           setMessagesArr((prevMessages) => [...prevMessages, chatData.message]);
         })
         .catch((error) => {
-          notify(error);
+          toast(error);
           console.log(error);
         });
     }
@@ -98,7 +100,7 @@ const ChatRoom = (props) => {
           !selectedChatCompare ||
           selectedChatCompare._id !== newMessageReceived.chat._id
         ) {
-          notify(`new message from  ${newMessageReceived.sender.name}`);
+          toast(`new message from  ${newMessageReceived.sender.name}`);
         } else {
           setMessagesArr((prevMessages) => [
             ...prevMessages,
@@ -107,7 +109,7 @@ const ChatRoom = (props) => {
         }
       });
     }
-  }, [socket, notify]);
+  }, [socket]);
 
   useEffect(() => {
     const { chatName, avatar } = setChatDetails(selectedChat, user);
@@ -130,12 +132,7 @@ const ChatRoom = (props) => {
         {loading ? (
           <Loader />
         ) : (
-          <ScrollableChat
-            messagesArr={messagesArr}
-            avatar={avatar}
-            chatName={chatName}
-            selectedChat={selectedChat}
-          />
+          <ScrollableChat messagesArr={messagesArr} chatName={chatName} />
         )}
 
         <div className="sendMessageBox">

@@ -1,22 +1,23 @@
 import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import "./Chat.css";
 import { setChatDetails } from "../../chatLogic";
-
+import { setSelectedChat } from "../../Reducers/chatReducers/selectedChatSlice";
 const Chat = (props) => {
-  const { setShowChatRoom, chat, setSelectedChat } = props;
+  const dispatch = useDispatch();
+  const { setShowChatRoom, chat } = props;
   const { user } = useSelector((state) => state.user);
   const { updatedGroupChat } = useSelector((state) => state.updatedGroupChat);
   const chatRoomActive = () => {
     setShowChatRoom(true);
-    setSelectedChat(chat);
+    dispatch(setSelectedChat(chat));
   };
 
   useEffect(() => {
     if (updatedGroupChat.success === true) {
-      setSelectedChat(updatedGroupChat.updatedGroupChat);
+      dispatch(setSelectedChat(updatedGroupChat.updatedGroupChat));
     }
-  }, [updatedGroupChat,setSelectedChat]);
+  }, [dispatch, updatedGroupChat]);
 
   // this is for the chatName and icon of the all the individual chats.
   let singleChatName, singleChatAvatar;
