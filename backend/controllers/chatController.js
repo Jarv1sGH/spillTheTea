@@ -296,7 +296,7 @@ const addUserToGroup = async (req, res) => {
         .json({ error: "Only admin can add users to the group " });
     }
 
-    const addUser = await Chat.findByIdAndUpdate(
+    const updatedGroupChat = await Chat.findByIdAndUpdate(
       chatId,
       {
         //$push adds an element to the array
@@ -307,7 +307,7 @@ const addUserToGroup = async (req, res) => {
       .populate("users", "-resetPasswordToken -resetPasswordExpire")
       .populate("groupAdmin", "-resetPasswordToken -resetPasswordExpire");
 
-    if (!addUser) {
+    if (!updatedGroupChat) {
       return res
         .status(400)
         .json({ error: "Chat with provided chatId was not found" });
@@ -315,7 +315,7 @@ const addUserToGroup = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "User added to the group successfully",
-      addUser,
+      updatedGroupChat,
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -348,10 +348,10 @@ const removeUserFromGroup = async (req, res) => {
     if (req.user._id.toString() !== groupChat.groupAdmin.toString()) {
       return res
         .status(401)
-        .json({ error: "Only admin can add users to the group " });
+        .json({ error: "Only admin can remove users from the group " });
     }
 
-    const removeUser = await Chat.findByIdAndUpdate(
+    const updatedGroupChat = await Chat.findByIdAndUpdate(
       chatId,
       {
         //$pull removes an element from the array
@@ -362,7 +362,7 @@ const removeUserFromGroup = async (req, res) => {
       .populate("users", "-resetPasswordToken -resetPasswordExpire")
       .populate("groupAdmin", "-resetPasswordToken -resetPasswordExpire");
 
-    if (!removeUser) {
+    if (!updatedGroupChat) {
       return res
         .status(400)
         .json({ error: "Chat with provided chatId was not found" });
@@ -370,7 +370,7 @@ const removeUserFromGroup = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "User removed from the group successfully",
-      removeUser,
+      updatedGroupChat,
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
