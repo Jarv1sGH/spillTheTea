@@ -43,7 +43,6 @@ const editGroupChatSlice = createSlice({
   name: "editGroupChat",
   initialState: {
     updatedGroupChat: [],
-    reloadChatList: false,
     loading: false,
     error: null,
   },
@@ -55,13 +54,11 @@ const editGroupChatSlice = createSlice({
       })
       .addCase(editGroupChat.fulfilled, (state, action) => {
         state.updatedGroupChat = action.payload;
-        state.reloadChatList = true;
         state.error = null;
         state.loading = false;
       })
       .addCase(editGroupChat.rejected, (state, action) => {
         state.loading = false;
-        state.newChat = null;
         try {
           state.error = JSON.parse(action.error.message);
         } catch (error) {

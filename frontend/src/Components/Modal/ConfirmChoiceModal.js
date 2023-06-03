@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./EditGroupModal.css";
-
+import { useDispatch } from "react-redux";
+import { deleteGroupChat } from "../../Reducers/chatReducers/deleteGroupChatSlice";
 const ConfirmChoiceModal = (props) => {
   const {
     choiceModal,
@@ -8,19 +9,41 @@ const ConfirmChoiceModal = (props) => {
     removeUserId,
     setRemoveUserData,
     selectedChat,
+    setShowChatRoom,
+    notify,
   } = props;
+
+  const [deletionData, setDeletionData] = useState({
+    chatId: selectedChat._id,
+  });
+  const dispatch = useDispatch();
+
   const closeModal = () => {
     choiceModal.current.close();
   };
 
-  console.log(removeUserId);
   const removeUserHandler = () => {
     setRemoveUserData((prevRemoveData) => ({
       ...prevRemoveData,
       userId: removeUserId.userId,
     }));
   };
-  const deleteGroupChatHandler = () => {};
+  const deleteGroupChatHandler = () => {
+    dispatch(deleteGroupChat({ data: deletionData })).then((action) => {
+      const response = action.payload;
+      choiceModal.current.close();
+      setShowChatRoom(false);
+      notify(response.message);
+    });
+  };
+
+  useEffect(() => {
+    setDeletionData((prevData) => ({
+      ...prevData,
+      chatId: selectedChat._id,
+    }));
+  }, [selectedChat]);
+
   return (
     <div className="groupModalInner">
       <div className="question">

@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import Chats from "./Components/Chat/Chats";
 import { useDispatch, useSelector } from "react-redux";
 import { loadUser } from "./Reducers/userReducers/userSlice";
-import Loader from "./Components/Loader/Loader";
+// import Loader from "./Components/Loader/Loader";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -25,7 +25,7 @@ function App() {
       dispatch(loadUser());
     }
     notify(message?.message);
-  }, [message]);
+  }, [message, dispatch]);
 
   return (
     <>

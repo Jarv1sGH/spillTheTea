@@ -7,7 +7,8 @@ import ConfirmChoiceModal from "../Modal/ConfirmChoiceModal";
 const ChatInfo = (props) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
-  const { selectedChat, setShowChatInfo, modal, notify } = props;
+  const { selectedChat, setShowChatInfo, modal, notify, setShowChatRoom } =
+    props;
   const [avatar, setAvatar] = useState(null);
   const [chatName, setChatName] = useState(null);
 
@@ -92,6 +93,7 @@ const ChatInfo = (props) => {
             setRemoveUserData={setRemoveUserData}
             removeUserId={removeUserId}
             selectedChat={selectedChat}
+            setShowChatRoom={setShowChatRoom}
           />
         </dialog>
       )}
