@@ -6,6 +6,12 @@
   color: white;
   border-radius: 10px;
 }
+.confirmChoiceModal {
+  background: #1b1d24;
+  border: 2px solid #008ecf;
+  color: white;
+  border-radius: 10px;
+}
 .groupModalInner {
   display: flex;
   position: relative;
@@ -33,4 +39,7 @@
 .modalForm {
   display: flex;
   flex-direction: column;
+}
+.modalButtons > button {
+  margin: 10px;
 }

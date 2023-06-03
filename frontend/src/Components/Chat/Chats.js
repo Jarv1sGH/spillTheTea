@@ -116,7 +116,7 @@ const Chats = ({ notify }) => {
   }, [notify, message]);
 
   const modalRef = useRef(null);
-  // const modal = document.querySelector("[data-modal]");
+  const choiceModalRef = useRef(null);
   return (
     <>
       {loading ? (
@@ -124,13 +124,12 @@ const Chats = ({ notify }) => {
       ) : (
         <div className="chatsOuterContainer">
           {selectedChat && (
-            <dialog ref={modalRef} className="groupChatModal" data-modal>
+            <dialog ref={modalRef} className="groupChatModal">
               <EditGroupModal
                 modal={modalRef}
                 selectedChat={selectedChat}
                 notify={notify}
               />
-              {/* <i className="fa-solid fa-xmark blueIcon"></i> */}
             </dialog>
           )}
           {
@@ -236,11 +235,15 @@ const Chats = ({ notify }) => {
               )}
 
               {showChatInfo && showChatRoom && (
+                // <div className="chatInfoWrapper">
                 <ChatInfo
                   selectedChat={selectedChat}
                   setShowChatInfo={setShowChatInfo}
                   modal={modalRef}
+                  choiceModal={choiceModalRef}
+                  notify={notify}
                 />
+                // </div>
               )}
             </div>
           </div>

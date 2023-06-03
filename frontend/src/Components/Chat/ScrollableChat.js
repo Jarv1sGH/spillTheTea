@@ -24,7 +24,7 @@ const ScrollableChat = (props) => {
                   >
                     <p className="senderMessages">
                       {message?.message}
-                      {selectedChat.isGroupChat && (
+                      {selectedChat?.isGroupChat && (
                         <span id="senderUserName">{message.sender.name} </span>
                       )}
                     </p>

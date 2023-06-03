@@ -27,9 +27,8 @@ const EditProfileForm = () => {
       profilePic: profilePicImg,
     });
   };
-  const signUpFormSubmit = (e) => {
+  const editFormSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
     dispatch(editProfile(formData));
   };
   return (
@@ -41,7 +40,7 @@ const EditProfileForm = () => {
       ) : (
         <div className="userContainer" style={{ justifyContent: "center" }}>
           <h2 style={{ margin: "0" }}>Edit Profile</h2>
-          <form onSubmit={signUpFormSubmit}>
+          <form onSubmit={editFormSubmit}>
             <div className="updatePassword">
               <input
                 className="input"
@@ -53,6 +52,7 @@ const EditProfileForm = () => {
                 pattern=".{3,}"
                 title="Name must be atleast 3 characters"
                 autoComplete="off"
+                required
               />
             </div>
             <div className="updatePassword">
@@ -64,6 +64,7 @@ const EditProfileForm = () => {
                 value={formData.email}
                 onChange={formInputChange}
                 autoComplete="off"
+                required
               />
             </div>
             <div className="updatePassword">

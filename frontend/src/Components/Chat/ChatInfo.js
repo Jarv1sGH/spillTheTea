@@ -1,12 +1,27 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./ChatInfo.css";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { setChatDetails } from "../../chatLogic";
+import { removeUser } from "../../Reducers/chatReducers/editGroupChatSlice";
+import ConfirmChoiceModal from "../Modal/ConfirmChoiceModal";
 const ChatInfo = (props) => {
+  const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
-  const { selectedChat, setShowChatInfo, modal } = props;
+  const { selectedChat, setShowChatInfo, modal, notify } = props;
   const [avatar, setAvatar] = useState(null);
   const [chatName, setChatName] = useState(null);
+
+  const [removeUserId, setRemoveUserId] = useState({
+    userName: "",
+    userId: "",
+  });
+
+  const [removeUserData, setRemoveUserData] = useState({
+    chatId: selectedChat?._id,
+  });
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const choiceModalRef = useRef(null);
+  const loggedInUserId = user?.user?._id;
   let chatUserEmail, chatUserAbout;
   if (user?.user?.email === selectedChat?.users?.[0]?.email) {
     chatUserEmail = selectedChat?.users?.[1]?.email;
@@ -21,21 +36,65 @@ const ChatInfo = (props) => {
 
   let isUserGroupAdmin = false;
   if (selectedChat?.isGroupChat) {
-    if (user?.user?._id === selectedChat?.groupAdmin?._id) {
+    if (loggedInUserId === selectedChat?.groupAdmin?._id) {
       isUserGroupAdmin = true;
     }
   }
+
   const showModal = () => {
     modal.current.showModal();
   };
+
+  const showChoiceModal = () => {
+    choiceModalRef.current.showModal();
+    setShowDeleteModal(true);
+  };
+
+  // updates the chat details every time selectedChat changes
   useEffect(() => {
     const { chatName, avatar } = setChatDetails(selectedChat, user);
     setChatName(chatName);
     setAvatar(avatar);
   }, [selectedChat, user]);
 
+  const removeUserHandler = (user) => {
+    setShowDeleteModal(false);
+    setRemoveUserId((prevData) => ({
+      ...prevData,
+      userName: user.name,
+      userId: user._id,
+    }));
+    choiceModalRef.current.showModal();
+  };
+
+  useEffect(() => {
+    if (removeUserData.userId === undefined) {
+      return;
+    }
+    // to remove user and then show toast
+    dispatch(removeUser(removeUserData)).then((action) => {
+      const updatedData = action.payload;
+      if (updatedData.success === true) {
+        notify(updatedData.message);
+        choiceModalRef.current.close();
+      }
+    });
+  }, [removeUserData, dispatch, notify]);
+
   return (
     <div className="chatInfoContainer">
+      {selectedChat && (
+        <dialog ref={choiceModalRef} className="confirmChoiceModal">
+          <ConfirmChoiceModal
+            choiceModal={choiceModalRef}
+            notify={notify}
+            showDeleteModal={showDeleteModal}
+            setRemoveUserData={setRemoveUserData}
+            removeUserId={removeUserId}
+            selectedChat={selectedChat}
+          />
+        </dialog>
+      )}
       <i
         title="close"
         onClick={closeChatInfoHandler}
@@ -75,7 +134,15 @@ const ChatInfo = (props) => {
               {selectedChat?.users &&
                 selectedChat?.users.map((user) => (
                   <div key={user?._id} className="member">
-                    <img src={user?.profilePic?.url} alt="" />
+                    {isUserGroupAdmin === true &&
+                      selectedChat?.groupAdmin?._id !== user._id && (
+                        <i
+                          onClick={() => removeUserHandler(user)}
+                          title="kick user "
+                          className="fa-solid fa-person-walking-arrow-right"
+                        ></i>
+                      )}
+                    <img src={user?.profilePic?.url} alt="user" />
                     <div>
                       <p>
                         {user?.name}{" "}
@@ -89,7 +156,10 @@ const ChatInfo = (props) => {
                 ))}
             </div>
             {isUserGroupAdmin && (
-              <button onClick={showModal}>Edit Group</button>
+              <div className="groupButtons">
+                <button onClick={showModal}>Edit Group</button>
+                <button onClick={showChoiceModal}>delete Group</button>
+              </div>
             )}
           </div>
         )}
