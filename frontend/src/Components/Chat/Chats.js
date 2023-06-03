@@ -28,6 +28,7 @@ const Chats = ({ notify }) => {
   const { user, isAuthenticated, loading, message } = useSelector(
     (state) => state.user
   );
+  const { deletionResponse } = useSelector((state) => state.deleteGroupChat);
   const { chats } = useSelector((state) => state.chats);
   const menuRef = useRef(null);
   const searchRef = useRef(null);
@@ -77,7 +78,15 @@ const Chats = ({ notify }) => {
     if (newChat?.existingChat) {
       notify("A chat with user already exists ");
     }
-  }, [dispatch, reloadChatList, newChat, notify, error, updatedGroupChat]);
+  }, [
+    dispatch,
+    reloadChatList, 
+    newChat,
+    notify,
+    error,
+    updatedGroupChat,
+    deletionResponse,
+  ]);
 
   // sets the search query for searchUsers function
   const searchQueryHandler = (e) => {
@@ -238,6 +247,7 @@ const Chats = ({ notify }) => {
                 // <div className="chatInfoWrapper">
                 <ChatInfo
                   selectedChat={selectedChat}
+                  setShowChatRoom={setShowChatRoom}
                   setShowChatInfo={setShowChatInfo}
                   modal={modalRef}
                   choiceModal={choiceModalRef}
