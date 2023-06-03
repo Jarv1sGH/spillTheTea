@@ -116,7 +116,7 @@ const createGroupChat = async (req, res) => {
         .populate("users", "-resetPasswordToken -resetPasswordExpire")
         .populate("groupAdmin", "-resetPasswordToken -resetPasswordExpire");
 
-      res.status(200).json({ success: true, groupChat });
+      return res.status(200).json({ success: true, groupChat });
     }
 
     //creating Group chat with icon
