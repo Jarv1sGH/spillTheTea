@@ -271,15 +271,15 @@ const deleteGroupChat = async (req, res) => {
 //add  user to the group
 const addUserToGroup = async (req, res) => {
   try {
-    const { userId, chatId } = req.body;
+    const { userIds, chatId } = req.body;
     if (!chatId) {
       return res.status(400).json({
-        error: "please provide  chat id",
+        error: "please provide chat id",
       });
     }
-    if (!userId) {
+    if (!userIds || !Array.isArray(userIds) || userIds.length === 0) {
       return res.status(400).json({
-        error: "please provide userId of user to add to the group",
+        error: "please provide an array of userIds to add to the group",
       });
     }
     const groupChat = await Chat.findOne({ _id: chatId });
@@ -299,8 +299,9 @@ const addUserToGroup = async (req, res) => {
     const updatedGroupChat = await Chat.findByIdAndUpdate(
       chatId,
       {
-        //$push adds an element to the array
-        $push: { users: userId },
+        // $addToSet adds elements to the array only if they are not already present
+        $addToSet: { users: { $each: userIds } },
+        // $push: { users: userId },
       },
       { new: true }
     )
