@@ -8,6 +8,7 @@ const Chat = (props) => {
   const { setShowChatRoom, chat } = props;
   const { user } = useSelector((state) => state.user);
   const { updatedGroupChat } = useSelector((state) => state.updatedGroupChat);
+  // const { selectedChat } = useSelector((state) => state.selectedChat);
   const chatRoomActive = () => {
     setShowChatRoom(true);
     dispatch(setSelectedChat(chat));

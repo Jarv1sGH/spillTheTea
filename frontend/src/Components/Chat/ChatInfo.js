@@ -6,6 +6,7 @@ import { setChatDetails } from "../../chatLogic";
 import { removeUser } from "../../Reducers/chatReducers/editGroupChatSlice";
 import ConfirmChoiceModal from "../Modal/ConfirmChoiceModal";
 import EditGroupModal from "../Modal/EditGroupModal";
+import AddUsersModal from "../Modal/AddUsersModal";
 const ChatInfo = (props) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
@@ -18,13 +19,15 @@ const ChatInfo = (props) => {
     userName: "",
     userId: "",
   });
+  const modalRef = useRef(null);
+  const choiceModalRef = useRef(null);
+  const addUsersModal = useRef(null);
 
   const [removeUserData, setRemoveUserData] = useState({
     chatId: selectedChat?._id,
   });
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const modalRef = useRef(null);
-  const choiceModalRef = useRef(null);
+
   const loggedInUserId = user?.user?._id;
   let chatUserEmail, chatUserAbout;
   if (user?.user?.email === selectedChat?.users?.[0]?.email) {
@@ -71,6 +74,10 @@ const ChatInfo = (props) => {
     choiceModalRef.current.showModal();
   };
 
+  const addUsersHandler = () => {
+    addUsersModal.current.showModal();
+  };
+
   useEffect(() => {
     if (removeUserData.userId === undefined) {
       return;
@@ -101,6 +108,11 @@ const ChatInfo = (props) => {
             removeUserId={removeUserId}
             setShowChatRoom={setShowChatRoom}
           />
+        </dialog>
+      )}
+      {selectedChat && (
+        <dialog ref={addUsersModal} className="groupChatModal">
+          <AddUsersModal addUsersModal={addUsersModal} />
         </dialog>
       )}
       <i
@@ -162,6 +174,14 @@ const ChatInfo = (props) => {
                     </div>
                   </div>
                 ))}
+              <p>
+                <i
+                  onClick={addUsersHandler}
+                  title="Add users to group"
+                  style={{ fontSize: "25px" }}
+                  className="fa-solid fa-circle-plus "
+                ></i>
+              </p>
             </div>
             {isUserGroupAdmin && (
               <div className="groupButtons">
