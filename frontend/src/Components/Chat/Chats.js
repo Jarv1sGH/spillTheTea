@@ -8,8 +8,7 @@ import { fetchAllChats } from "../../Reducers/chatReducers/allChatsSlice";
 import OverlayMenu from "../ProfileMenu/OverlayMenu";
 import ChatInfo from "./ChatInfo";
 import Loader from "../Loader/Loader";
-import { searchUsers } from "../../Reducers/userReducers/searchSlice";
-import SearchResults from "./SearchResults";
+import SearchBar from "../searchBar/SearchBar";
 import { toast } from "react-toastify";
 
 const Chats = () => {
@@ -18,8 +17,6 @@ const Chats = () => {
   const [showChatRoom, setShowChatRoom] = useState(false);
   const [settingsActive, setSettingsActive] = useState(false);
   const [showChatInfo, setShowChatInfo] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [showSearchResults, setShowSearchResults] = useState(false);
   const { updatedGroupChat } = useSelector((state) => state.updatedGroupChat);
   const { selectedChat } = useSelector((state) => state.selectedChat);
   const { newChat, reloadChatList, error } = useSelector(
@@ -31,7 +28,6 @@ const Chats = () => {
   const { deletionResponse } = useSelector((state) => state.deleteGroupChat);
   const { chats } = useSelector((state) => state.chats);
   const menuRef = useRef(null);
-  const searchRef = useRef(null);
 
   // shows the settings menu
   const settingsHandler = (event) => {
@@ -43,10 +39,6 @@ const Chats = () => {
     // closes the profile menu if clicked anywhere on screen besides the menu
     if (menuRef.current && !menuRef.current.contains(event.target)) {
       setSettingsActive(false);
-    }
-    // closes the search results  if clicked anywhere on screen besides the search results
-    if (searchRef.current && !searchRef.current.contains(event.target)) {
-      setShowSearchResults(false);
     }
   };
 
@@ -86,31 +78,6 @@ const Chats = () => {
     updatedGroupChat,
     deletionResponse,
   ]);
-
-  // sets the search query for searchUsers function
-  const searchQueryHandler = (e) => {
-    setSearchQuery(e.target.value);
-  };
-
-  // onClick function that dispatches searchUsers function
-  const searchUsersHandler = (e) => {
-    e.preventDefault();
-    if (searchQuery === "") {
-      return;
-    }
-    dispatch(searchUsers(searchQuery));
-  };
-
-  const handleEnterKey = (e) => {
-    if (e.keyCode === 13) {
-      searchUsersHandler(e);
-    }
-  };
-
-  // to show the returned users from the search
-  const searchResultsHandler = () => {
-    setShowSearchResults(true);
-  };
 
   // to show toast
   const previousMessageRef = useRef(null);
@@ -155,35 +122,13 @@ const Chats = () => {
                     className="fa-solid fa-pen-to-square"
                   ></i>
                 </div>
-                <div className="searchContainer" ref={searchRef}>
-                  <div className="textInputWrapper">
-                    <input
-                      placeholder="Enter your friends username or email"
-                      type="text"
-                      className="textInput"
-                      onChange={searchQueryHandler}
-                      onClick={searchResultsHandler}
-                      name="search"
-                      onKeyDown={handleEnterKey}
-                      autoComplete="off"
-                    />
-                    <i
-                      onClick={searchUsersHandler}
-                      className="fa-solid fa-magnifying-glass"
-                    ></i>
-                  </div>
-                  {showSearchResults && (
-                    <SearchResults
-                      setShowSearchResults={setShowSearchResults}
-                    />
-                  )}
-                </div>
+                <SearchBar />
                 <div className="chatNamesWrapper">
                   {chats.chats &&
                     chats.chats.map((item) => (
                       <div
                         className={
-                       selectedChat?._id === item._id
+                          selectedChat?._id === item._id
                             ? "selected singleChatWrapper"
                             : "singleChatWrapper"
                         }
