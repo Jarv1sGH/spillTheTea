@@ -315,7 +315,7 @@ const addUserToGroup = async (req, res) => {
     }
     return res.status(200).json({
       success: true,
-      message: "User added to the group successfully",
+      message: "Users added to the group successfully",
       updatedGroupChat,
     });
   } catch (error) {
