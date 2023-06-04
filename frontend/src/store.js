@@ -11,6 +11,7 @@ import newChatReducer from "./Reducers/chatReducers/newChatSlice";
 import editGroupChatReducer from "./Reducers/chatReducers/editGroupChatSlice";
 import deleteGroupChatReducer from "./Reducers/chatReducers/deleteGroupChatSlice";
 import selectedChatReducer from "./Reducers/chatReducers/selectedChatSlice";
+import showSearchResultsReducer from "./Reducers/chatReducers/showSearchResultsSlice";
 
 const store = configureStore({
   reducer: {
@@ -26,6 +27,7 @@ const store = configureStore({
     updatedGroupChat: editGroupChatReducer,
     deleteGroupChat: deleteGroupChatReducer,
     selectedChat: selectedChatReducer,
+    showSearchResults: showSearchResultsReducer,
   },
 });
 

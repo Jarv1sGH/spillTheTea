@@ -1,13 +1,9 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 const ScrollableChat = (props) => {
   const { user } = useSelector((state) => state.user);
   const { selectedChat } = useSelector((state) => state.selectedChat);
   const { chatName, messagesArr } = props;
-
-  useEffect(() => {
-    console.log(selectedChat);
-  }, [selectedChat]);
 
   return (
     <div className="chatRoomInner">
@@ -23,9 +19,7 @@ const ScrollableChat = (props) => {
             <div key={message?._id}>
               {message?.sender?._id !== user?.user?._id && (
                 <div style={{ alignItems: "flex-start" }} className="message">
-                  <div
-                    className="msgContent"
-                  >
+                  <div className="msgContent">
                     <p className="senderMessages">
                       {message?.message}
                       {selectedChat?.isGroupChat && (

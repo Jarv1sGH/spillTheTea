@@ -1,12 +1,13 @@
 import React, { useRef, useState, useEffect } from "react";
 import "./SearchBar.css";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import SearchResults from "./SearchResults";
 import { searchUsers } from "../../Reducers/userReducers/searchSlice";
+import { setShowSearchResults } from "../../Reducers/chatReducers/showSearchResultsSlice";
 const SearchBar = () => {
   const dispatch = useDispatch();
   const [searchQuery, setSearchQuery] = useState("");
-  const [showSearchResults, setShowSearchResults] = useState(false);
+  const { showSearchResults } = useSelector((state) => state.showSearchResults);
   const searchRef = useRef(null);
   // sets the search query for searchUsers function
   const searchQueryHandler = (e) => {
@@ -30,13 +31,13 @@ const SearchBar = () => {
 
   // to show the returned users from the search
   const searchResultsHandler = () => {
-    setShowSearchResults(true);
+    dispatch(setShowSearchResults(true));
   };
 
   const handleClickOutsideMenu = (event) => {
     // closes the search results  if clicked anywhere on screen besides the search results
     if (searchRef.current && !searchRef.current.contains(event.target)) {
-      setShowSearchResults(false);
+      dispatch(setShowSearchResults(false));
     }
   };
 
@@ -45,7 +46,7 @@ const SearchBar = () => {
     return () => {
       document.removeEventListener("click", handleClickOutsideMenu);
     };
-  }, []);
+  });
 
   return (
     <div className="searchContainer" ref={searchRef}>

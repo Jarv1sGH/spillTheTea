@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Loader from "../Loader/Loader";
 import { newChatCreator } from "../../Reducers/chatReducers/newChatSlice";
-const SearchResults = (props) => {
-  const { setShowSearchResults } = props;
+import { setShowSearchResults } from "../../Reducers/chatReducers/showSearchResultsSlice";
+const SearchResults = () => {
   const dispatch = useDispatch();
   const { error, usersArr, loading } = useSelector((state) => state.search);
   const { user } = useSelector((state) => state.user);
@@ -17,8 +17,8 @@ const SearchResults = (props) => {
       return;
     }
     dispatch(newChatCreator(recipientId));
-    setShowSearchResults(false);
-  }, [dispatch, recipientId, setShowSearchResults]);
+    dispatch(setShowSearchResults(false));
+  }, [dispatch, recipientId]);
   return (
     <div className="searchResults">
       {Object.keys(usersArr).length === 0 && error === null && (

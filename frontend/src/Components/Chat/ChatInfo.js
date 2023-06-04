@@ -111,7 +111,7 @@ const ChatInfo = (props) => {
         </dialog>
       )}
       {selectedChat && (
-        <dialog ref={addUsersModal} className="groupChatModal">
+        <dialog ref={addUsersModal} className="groupChatModal addUserModal">
           <AddUsersModal addUsersModal={addUsersModal} />
         </dialog>
       )}

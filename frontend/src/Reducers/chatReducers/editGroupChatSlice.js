@@ -39,6 +39,24 @@ export const removeUser = createAsyncThunk("chat/removeUser", async (data) => {
   }
 });
 
+export const addUser = createAsyncThunk("group/addUser", async (formData) => {
+  const response = await axios.put(`api/v1/chat/group/add`, formData, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    validateStatus: (status) => {
+      return status >= 200;
+    },
+  });
+  if (response.status >= 200 && response.status < 300) {
+    // If response status is 2xx, return the data as usual
+    return response.data;
+  } else {
+    // If response status is not 2xx, throw an error with the full response
+    throw new Error(JSON.stringify(response.data));
+  }
+});
+
 const editGroupChatSlice = createSlice({
   name: "editGroupChat",
   initialState: {
@@ -66,6 +84,26 @@ const editGroupChatSlice = createSlice({
         }
       })
 
+      // add user
+
+      .addCase(addUser.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(addUser.fulfilled, (state, action) => {
+        state.updatedGroupChat = action.payload;
+        state.error = null;
+        state.loading = false;
+      })
+      .addCase(addUser.rejected, (state, action) => {
+        state.loading = false;
+        state.newChat = null;
+        try {
+          state.error = JSON.parse(action.error.message);
+        } catch (error) {
+          state.error = action.error.message;
+        }
+      })
+
       // remove user
 
       .addCase(removeUser.pending, (state) => {
@@ -73,7 +111,6 @@ const editGroupChatSlice = createSlice({
       })
       .addCase(removeUser.fulfilled, (state, action) => {
         state.updatedGroupChat = action.payload;
-        state.reloadChatList = true;
         state.error = null;
         state.loading = false;
       })
