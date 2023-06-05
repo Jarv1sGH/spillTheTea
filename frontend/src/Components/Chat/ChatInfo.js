@@ -6,14 +6,15 @@ import { setChatDetails } from "../../chatLogic";
 import { removeUser } from "../../Reducers/chatReducers/editGroupChatSlice";
 import ConfirmChoiceModal from "../Modal/ConfirmChoiceModal";
 import EditGroupModal from "../Modal/EditGroupModal";
-// import AddUsersModal from "../Modal/AddUsersModal";
+import { leaveGroupChat } from "../../Reducers/chatReducers/deleteGroupChatSlice";
 const ChatInfo = (props) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
-  const { setShowChatInfo, setShowChatRoom,addUsersModalRef } = props;
+  const { setShowChatInfo, setShowChatRoom, addUsersModalRef } = props;
   const { selectedChat } = useSelector((state) => state.selectedChat);
   const [avatar, setAvatar] = useState(null);
   const [chatName, setChatName] = useState(null);
+  const [isUserGroupAdmin, setIsUserGroupAdmin] = useState(false);
 
   const [removeUserId, setRemoveUserId] = useState({
     userName: "",
@@ -41,12 +42,15 @@ const ChatInfo = (props) => {
     setShowChatInfo(false);
   };
 
-  let isUserGroupAdmin = false;
-  if (selectedChat?.isGroupChat) {
-    if (loggedInUserId === selectedChat?.groupAdmin?._id) {
-      isUserGroupAdmin = true;
+  // let isUserGroupAdmin = false;
+
+  useEffect(() => {
+    if (selectedChat?.isGroupChat) {
+      if (loggedInUserId === selectedChat?.groupAdmin?._id) {
+        setIsUserGroupAdmin(true);
+      }
     }
-  }
+  }, [selectedChat, loggedInUserId]);
 
   const showModal = () => {
     modalRef.current.showModal();
@@ -92,6 +96,13 @@ const ChatInfo = (props) => {
     });
   }, [removeUserData, dispatch]);
 
+  const leaveGroupHandler = () => {
+    dispatch(leaveGroupChat(selectedChat._id)).then((action) => {
+      const response = action.payload;
+      setShowChatRoom(false);
+      toast(response.message);
+    });
+  };
   return (
     <div className="chatInfoContainer">
       {selectedChat && (
@@ -110,11 +121,6 @@ const ChatInfo = (props) => {
           />
         </dialog>
       )}
-      {/* {selectedChat && (
-        <dialog ref={addUsersModalRef} className="groupChatModal addUserModal">
-          <AddUsersModal addUsersModalRef={addUsersModalRef} />
-        </dialog>
-      )} */}
       <i
         title="close"
         onClick={closeChatInfoHandler}
@@ -183,11 +189,13 @@ const ChatInfo = (props) => {
                 ></i>
               </p>
             </div>
-            {isUserGroupAdmin && (
+            {isUserGroupAdmin === true ? (
               <div className="groupButtons">
                 <button onClick={showModal}>Edit Group</button>
                 <button onClick={showChoiceModal}>delete Group</button>
               </div>
+            ) : (
+              <button onClick={leaveGroupHandler}>Leave Group</button>
             )}
           </div>
         )}

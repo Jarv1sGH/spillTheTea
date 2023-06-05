@@ -51,6 +51,7 @@
   padding: 15px;
   overflow-wrap: break-word;
   position: relative;
+  /* min-width: 20rem; */
 }
 .sendMessageBox {
   position: absolute;

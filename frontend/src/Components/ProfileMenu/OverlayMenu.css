@@ -4,7 +4,6 @@
   align-items: center;
   position: absolute;
   border: 2px solid #008ecf;
-  /* border: 2px solid #2467fd; */
   height: 50vh;
   width: 25vw;
   border-radius: 10px;
@@ -43,7 +42,6 @@
 }
 .active {
   background-color: #008ecf;
-  /* background-color: #2467fd; */
 }
 .themeToggle {
   display: flex;
@@ -61,7 +59,6 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  /* border: 2px solid; */
   width: 70%;
 }
 .btnContainer > button {
@@ -95,7 +92,6 @@
   font-size: 18px;
   padding: 10px;
   margin: 0;
-  /* border: 2px solid; */
 }
 .aboutMe {
   display: flex;

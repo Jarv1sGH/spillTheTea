@@ -126,7 +126,7 @@ const ChatRoom = (props) => {
           <i
             title="Chat Info"
             onClick={showChatInfoHandler}
-            className="fa-solid fa-circle-info"
+            className="fa-solid fa-bars"
           ></i>
         </div>
         {loading ? (

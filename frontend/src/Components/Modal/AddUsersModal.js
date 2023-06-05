@@ -46,6 +46,7 @@ const AddUsersModal = ({ addUsersModalRef }) => {
   };
 
   const addToSelectedUsers = (user) => {
+    dispatch(setShowCreateModal(false))
     // if the user is already in the group
     if (
       showCreateModal === false &&

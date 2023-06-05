@@ -4,7 +4,7 @@ const ScrollableChat = (props) => {
   const { user } = useSelector((state) => state.user);
   const { selectedChat } = useSelector((state) => state.selectedChat);
   const { chatName, messagesArr } = props;
-
+  console.log(messagesArr);
   return (
     <div className="chatRoomInner">
       {messagesArr?.length === 0 && (

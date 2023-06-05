@@ -12,14 +12,13 @@ import SearchBar from "../searchBar/SearchBar";
 import { toast } from "react-toastify";
 import AddUsersModal from "../Modal/AddUsersModal";
 import { setShowCreateModal } from "../../Reducers/chatReducers/showCreateModalSlice";
-// import { setSelectedChat } from "../../Reducers/chatReducers/selectedChatSlice";
 
 const Chats = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [showChatRoom, setShowChatRoom] = useState(false);
   const [settingsActive, setSettingsActive] = useState(false);
-  const [showChatInfo, setShowChatInfo] = useState(true);
+  const [showChatInfo, setShowChatInfo] = useState(false);
   const { updatedGroupChat } = useSelector((state) => state.updatedGroupChat);
   const { selectedChat } = useSelector((state) => state.selectedChat);
   const { newChat, error } = useSelector((state) => state.newChat);
@@ -91,14 +90,12 @@ const Chats = () => {
         <Loader />
       ) : (
         <div className="chatsOuterContainer">
-          {/* {selectedChat && ( */}
           <dialog
             ref={addUsersModalRef}
             className="groupChatModal addUserModal"
           >
             <AddUsersModal addUsersModalRef={addUsersModalRef} />
           </dialog>
-          {/* )} */}
           {<OverlayMenu settingsActive={settingsActive} innerRef={menuRef} />}
           <div className="chatsInnerWrapper">
             <div className="sideMenu">
