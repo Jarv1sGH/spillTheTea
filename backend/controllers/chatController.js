@@ -388,6 +388,51 @@ const removeUserFromGroup = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+//Leaving a group
+const leaveGroup = async (req, res) => {
+  try {
+    const { chatId } = req.body;
+    const userId = req.user._id;
+    if (!chatId) {
+      return res.status(400).json({
+        error: "please provide chat id",
+      });
+    }
+    if (!userId) {
+      return res.status(400).json({
+        error: "please login to access",
+      });
+    }
+
+    const groupChat = await Chat.findOne({ _id: chatId });
+    //checking if group chat with the id exists or not
+    if (!groupChat) {
+      return res.status(400).json({
+        error: "chat with provided ChatId was not found",
+      });
+    }
+    const updatedGroupChat = await Chat.findByIdAndUpdate(
+      chatId,
+      {
+        //$pull removes an element from the array
+        $pull: { users: userId },
+      },
+      { new: true }
+    );
+    if (!updatedGroupChat) {
+      return res
+        .status(400)
+        .json({ error: "Chat with provided chatId was not found" });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "Left group successfully",
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 module.exports = {
   createChat,
   fetchUserChats,
@@ -396,4 +441,5 @@ module.exports = {
   deleteGroupChat,
   addUserToGroup,
   removeUserFromGroup,
+  leaveGroup,
 };
