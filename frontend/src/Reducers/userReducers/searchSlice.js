@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import {options} from "../../chatLogic";
+import { options } from "../../chatLogic";
 
 export const searchUsers = createAsyncThunk(
   "search/searchUsers",
@@ -19,12 +19,18 @@ export const searchUsers = createAsyncThunk(
     }
   }
 );
+
 const searchSlice = createSlice({
   name: "searchUser",
   initialState: {
     usersArr: {},
     loading: false,
     error: null,
+  },
+  reducers: {
+    clearSearch: (state) => {
+      state.usersArr = {};
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -48,4 +54,5 @@ const searchSlice = createSlice({
   },
 });
 
+export const { clearSearch } = searchSlice.actions;
 export default searchSlice.reducer;

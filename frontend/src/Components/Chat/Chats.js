@@ -10,6 +10,9 @@ import ChatInfo from "./ChatInfo";
 import Loader from "../Loader/Loader";
 import SearchBar from "../searchBar/SearchBar";
 import { toast } from "react-toastify";
+import AddUsersModal from "../Modal/AddUsersModal";
+import { setShowCreateModal } from "../../Reducers/chatReducers/showCreateModalSlice";
+// import { setSelectedChat } from "../../Reducers/chatReducers/selectedChatSlice";
 
 const Chats = () => {
   const navigate = useNavigate();
@@ -19,15 +22,14 @@ const Chats = () => {
   const [showChatInfo, setShowChatInfo] = useState(true);
   const { updatedGroupChat } = useSelector((state) => state.updatedGroupChat);
   const { selectedChat } = useSelector((state) => state.selectedChat);
-  const { newChat, reloadChatList, error } = useSelector(
-    (state) => state.newChat
-  );
+  const { newChat, error } = useSelector((state) => state.newChat);
   const { user, isAuthenticated, loading, message } = useSelector(
     (state) => state.user
   );
   const { deletionResponse } = useSelector((state) => state.deleteGroupChat);
   const { chats } = useSelector((state) => state.chats);
   const menuRef = useRef(null);
+  const addUsersModalRef = useRef(null);
 
   // shows the settings menu
   const settingsHandler = (event) => {
@@ -57,27 +59,21 @@ const Chats = () => {
       }
   }, [isAuthenticated, loading, navigate]);
 
+  const newChatRef = useRef(null);
   // fetches all the chats of the user
   useEffect(() => {
     dispatch(fetchAllChats());
-    if (
-      reloadChatList === true &&
-      newChat.existingChat === undefined &&
-      error === null
-    ) {
-      toast("New Chat Created");
+    if (newChatRef.current !== newChat?.message) {
+      if (newChat?.message) {
+        toast(newChat?.message);
+      }
     }
-    if (newChat?.existingChat) {
-      toast("A chat with user already exists ");
+    newChatRef.current = newChat?.message;
+
+    if (error) {
+      toast(error);
     }
-  }, [
-    dispatch,
-    reloadChatList,
-    newChat,
-    error,
-    updatedGroupChat,
-    deletionResponse,
-  ]);
+  }, [dispatch, newChat, error, updatedGroupChat, deletionResponse]);
 
   // to show toast
   const previousMessageRef = useRef(null);
@@ -95,6 +91,14 @@ const Chats = () => {
         <Loader />
       ) : (
         <div className="chatsOuterContainer">
+          {/* {selectedChat && ( */}
+          <dialog
+            ref={addUsersModalRef}
+            className="groupChatModal addUserModal"
+          >
+            <AddUsersModal addUsersModalRef={addUsersModalRef} />
+          </dialog>
+          {/* )} */}
           {<OverlayMenu settingsActive={settingsActive} innerRef={menuRef} />}
           <div className="chatsInnerWrapper">
             <div className="sideMenu">
@@ -118,6 +122,10 @@ const Chats = () => {
                 <div>
                   <h1>Chats</h1>
                   <i
+                    onClick={() => {
+                      dispatch(setShowCreateModal(true));
+                      addUsersModalRef.current.showModal();
+                    }}
                     title="create group chat"
                     className="fa-solid fa-pen-to-square"
                   ></i>
@@ -166,6 +174,7 @@ const Chats = () => {
                 <ChatInfo
                   setShowChatRoom={setShowChatRoom}
                   setShowChatInfo={setShowChatInfo}
+                  addUsersModalRef={addUsersModalRef}
                 />
               )}
             </div>

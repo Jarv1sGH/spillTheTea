@@ -10,9 +10,9 @@ export const setChatDetails = (chat, user) => {
   if (chat?.isGroupChat === true) {
     return {
       chatName: chat?.chatName,
-      avatar: chat?.groupIcon.url,
+      avatar: chat?.groupIcon?.url,
     };
-  } else if (chat?.users[0]?.email === user?.user?.email) {
+  } else if (chat?.users?.[0]?.email === user?.user?.email) {
     return {
       chatName: chat?.users[1]?.name,
       avatar: chat?.users[1]?.profilePic?.url,

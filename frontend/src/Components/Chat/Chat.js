@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import "./Chat.css";
 import { setChatDetails } from "../../chatLogic";
@@ -20,8 +20,7 @@ const Chat = (props) => {
     }
   }, [dispatch, updatedGroupChat]);
 
-  // this is for the chatName and icon of the all the individual chats.
-  let singleChatName, singleChatAvatar;
+  let singleChatAvatar, singleChatName;
   const { chatName, avatar } = setChatDetails(chat, user);
   singleChatName = chatName;
   singleChatAvatar = avatar;

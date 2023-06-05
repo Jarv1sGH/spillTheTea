@@ -12,6 +12,7 @@ import editGroupChatReducer from "./Reducers/chatReducers/editGroupChatSlice";
 import deleteGroupChatReducer from "./Reducers/chatReducers/deleteGroupChatSlice";
 import selectedChatReducer from "./Reducers/chatReducers/selectedChatSlice";
 import showSearchResultsReducer from "./Reducers/chatReducers/showSearchResultsSlice";
+import showCreateModalReducer from "./Reducers/chatReducers/showCreateModalSlice";
 
 const store = configureStore({
   reducer: {
@@ -28,6 +29,7 @@ const store = configureStore({
     deleteGroupChat: deleteGroupChatReducer,
     selectedChat: selectedChatReducer,
     showSearchResults: showSearchResultsReducer,
+    showCreateModal: showCreateModalReducer,
   },
 });
 

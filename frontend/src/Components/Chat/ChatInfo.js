@@ -6,11 +6,11 @@ import { setChatDetails } from "../../chatLogic";
 import { removeUser } from "../../Reducers/chatReducers/editGroupChatSlice";
 import ConfirmChoiceModal from "../Modal/ConfirmChoiceModal";
 import EditGroupModal from "../Modal/EditGroupModal";
-import AddUsersModal from "../Modal/AddUsersModal";
+// import AddUsersModal from "../Modal/AddUsersModal";
 const ChatInfo = (props) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
-  const { setShowChatInfo, setShowChatRoom } = props;
+  const { setShowChatInfo, setShowChatRoom,addUsersModalRef } = props;
   const { selectedChat } = useSelector((state) => state.selectedChat);
   const [avatar, setAvatar] = useState(null);
   const [chatName, setChatName] = useState(null);
@@ -21,7 +21,7 @@ const ChatInfo = (props) => {
   });
   const modalRef = useRef(null);
   const choiceModalRef = useRef(null);
-  const addUsersModal = useRef(null);
+  // const addUsersModalRef = useRef(null);
 
   const [removeUserData, setRemoveUserData] = useState({
     chatId: selectedChat?._id,
@@ -75,7 +75,7 @@ const ChatInfo = (props) => {
   };
 
   const addUsersHandler = () => {
-    addUsersModal.current.showModal();
+    addUsersModalRef.current.showModal();
   };
 
   useEffect(() => {
@@ -110,11 +110,11 @@ const ChatInfo = (props) => {
           />
         </dialog>
       )}
-      {selectedChat && (
-        <dialog ref={addUsersModal} className="groupChatModal addUserModal">
-          <AddUsersModal addUsersModal={addUsersModal} />
+      {/* {selectedChat && (
+        <dialog ref={addUsersModalRef} className="groupChatModal addUserModal">
+          <AddUsersModal addUsersModalRef={addUsersModalRef} />
         </dialog>
-      )}
+      )} */}
       <i
         title="close"
         onClick={closeChatInfoHandler}
