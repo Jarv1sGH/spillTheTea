@@ -41,7 +41,10 @@ const createChat = async (req, res) => {
 
     if (existingChat.length > 0) {
       // since there will always only be one chat b/w two users hence the 0th index in the array
-      return res.status(200).json({ existingChat: existingChat[0] });
+      return res.status(200).json({
+        existingChat: existingChat[0],
+        message: "A chat with user already exists",
+      });
     }
     const chatData = {
       chatName: req.user.name,
@@ -52,7 +55,7 @@ const createChat = async (req, res) => {
     const fullChatData = await Chat.findOne({ _id: chat._id }).populate(
       "users"
     );
-    return res.status(200).json(fullChatData);
+    return res.status(200).json({ fullChatData, message: "New chat created!" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -96,7 +99,7 @@ const createGroupChat = async (req, res) => {
     let users = JSON.parse(req.body.users);
     const file = req.files?.groupIcon;
     // if users array has only one user beside the creator of the groupChat.
-    if (users.length < 2) {
+    if (!Array.isArray(users) || users.length < 2) {
       return res
         .status(400)
         .send("More than 2 users are required to form a group chat");
@@ -116,7 +119,9 @@ const createGroupChat = async (req, res) => {
         .populate("users", "-resetPasswordToken -resetPasswordExpire")
         .populate("groupAdmin", "-resetPasswordToken -resetPasswordExpire");
 
-      return res.status(200).json({ success: true, groupChat });
+      return res
+        .status(200)
+        .json({ success: true, message: "Group Chat Created", groupChat });
     }
 
     //creating Group chat with icon
@@ -148,7 +153,9 @@ const createGroupChat = async (req, res) => {
     const groupChat = await Chat.findOne({ _id: groupChatData._id })
       .populate("users", "-resetPasswordToken -resetPasswordExpire")
       .populate("groupAdmin", "-resetPasswordToken -resetPasswordExpire");
-    res.status(200).json({ success: true, groupChat });
+    res
+      .status(200)
+      .json({ success: true, message: "Group Chat Created", groupChat });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -253,7 +260,11 @@ const deleteGroupChat = async (req, res) => {
     if (req.user._id.toString() !== groupChat.groupAdmin.toString()) {
       return res.status(401).json({ error: "Only admin can delete the group" });
     }
-
+    const imageId = groupChat.groupIcon.public_id;
+    // if the groupIcon is not the default one
+    if (imageId !== "profilePics/groupIcon_gv7ks7") {
+      await cloudinary.v2.uploader.destroy(imageId);
+    }
     const deletedGroupChat = await Chat.findByIdAndDelete(chatId);
 
     if (!deletedGroupChat) {
