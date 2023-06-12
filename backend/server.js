@@ -24,14 +24,14 @@ cloudinary.config({
 });
 
 //Server
-const server = app.listen(process.env.PORT, () => {
+const server = app.listen(process.env.PORT || 4000, () => {
   console.log(`Server is running on http://localhost:${process.env.PORT}`);
 });
 
 const io = require("socket.io")(server, {
   pingTimeout: 60000,
   cors: {
-    origin: ["http://localhost:3000", "spillthetea.vercel.app"],
+    origin: ["http://localhost:4000", "spillthetea.vercel.app"],
   },
 });
 io.on("connection", (socket) => {
