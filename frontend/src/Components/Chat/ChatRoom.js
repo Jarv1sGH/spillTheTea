@@ -10,7 +10,7 @@ import { setChatDetails } from "../../chatLogic";
 import { toast } from "react-toastify";
 import io from "socket.io-client";
 import { setSelectedChat } from "../../Reducers/chatReducers/selectedChatSlice";
-const ENDPOINT = "spillthetea.vercel.app";
+const ENDPOINT = "https://spillthetea.vercel.app";
 let selectedChatCompare;
 const ChatRoom = (props) => {
   const dispatch = useDispatch();
