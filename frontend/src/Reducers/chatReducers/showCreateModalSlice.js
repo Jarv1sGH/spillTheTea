@@ -2,19 +2,19 @@ import { createSlice } from "@reduxjs/toolkit";
 const showCreateModalSlice = createSlice({
   name: "showCreateModal",
   initialState: {
-    showCreateModal: null,
+    showCreateModal: false,
   },
   reducers: {
     setShowCreateModal: (state, action) => {
       state.showCreateModal = action.payload;
-    }, 
+    },
     clearCreateModal: (state) => {
-      state.showCreateModal = null;
+      state.showCreateModal = false;
     },
   },
 });
 
 export const { setShowCreateModal, clearCreateModal } =
-showCreateModalSlice.actions;
+  showCreateModalSlice.actions;
 
 export default showCreateModalSlice.reducer;

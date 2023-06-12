@@ -52,3 +52,38 @@
   border: 2px solid red;
   width: 20%;
 }
+
+@media screen and (max-width: 1150px) {
+  .chatNames {
+    min-width: 35%;
+  }
+  .lastMsgTime {
+    font-size: 12px;
+  }
+}
+@media screen and (max-width: 700px) {
+  .chatNames {
+    /* display: none;*/
+    width: 100% !important;
+    /* min-width: 100s%; */
+  }
+  .chatRoom {
+    position: absolute !important;
+    min-width: 100%;
+    z-index: 15;
+    background-color: #1b1d24;
+    transition: all 0.3s;
+  }
+  .sideMenu{
+    display: none !important;
+  }
+  .mobileChatRoomOpen {
+    transform: translateX(0%);
+  }
+  .mobileChatRoomClose {
+    transform: translateX(100%);
+  }
+  .startChatting {
+    display: none !important;
+  }
+}

@@ -5,11 +5,12 @@ import { setChatDetails } from "../../chatLogic";
 import { setSelectedChat } from "../../Reducers/chatReducers/selectedChatSlice";
 const Chat = (props) => {
   const dispatch = useDispatch();
-  const { setShowChatRoom, chat } = props;
+  const { setShowChatRoom, setMobileChatRoom, chat } = props;
   const { user } = useSelector((state) => state.user);
   const { updatedGroupChat } = useSelector((state) => state.updatedGroupChat);
   const chatRoomActive = () => {
     setShowChatRoom(true);
+    setMobileChatRoom(true);
     dispatch(setSelectedChat(chat));
   };
 

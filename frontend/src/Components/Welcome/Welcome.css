@@ -274,8 +274,10 @@ button.ghost {
     width: 100%;
     left: 0;
   }
-  .overlayPanel > h1,
-  p {
+  .overlayPanel > h1 {
+    display: none;
+  }
+  .overlayPanel > p {
     display: none;
   }
   #forgotPasswordText {

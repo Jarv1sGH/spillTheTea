@@ -4,7 +4,6 @@ const ScrollableChat = (props) => {
   const { user } = useSelector((state) => state.user);
   const { selectedChat } = useSelector((state) => state.selectedChat);
   const { chatName, messagesArr } = props;
-  console.log(messagesArr);
   return (
     <div className="chatRoomInner">
       {messagesArr?.length === 0 && (
@@ -18,9 +17,12 @@ const ScrollableChat = (props) => {
           .map((message) => (
             <div key={message?._id}>
               {message?.sender?._id !== user?.user?._id && (
-                <div style={{ alignItems: "flex-start" }} className="message">
+                <div
+                  style={{ alignItems: "flex-start", marginLeft: "12px" }}
+                  className="message"
+                >
                   <div className="msgContent">
-                    <p className="senderMessages">
+                    <p  className="senderMessages">
                       {message?.message}
                       {selectedChat?.isGroupChat && (
                         <span id="senderUserName">{message.sender.name} </span>

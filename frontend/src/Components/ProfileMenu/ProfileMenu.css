@@ -4,8 +4,8 @@
   align-items: center;
   position: absolute;
   border: 2px solid #008ecf;
-  height: 50vh;
-  width: 25vw;
+  height: 480px;
+  width: 420px;
   border-radius: 10px;
   z-index: 100;
   background-color: #1b1d24;
@@ -13,6 +13,13 @@
   left: 30px;
   transition: transform 0.3s ease-out;
   transform: translateX(-150%);
+}
+.profileMenuWrapper {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 100%;
+  align-items: center;
 }
 .options {
   display: flex;
@@ -95,8 +102,8 @@
 }
 .aboutMe {
   display: flex;
-  flex-direction: column;
   align-items: center;
+  flex-direction: column;
   width: 100%;
   margin: 10px 0;
   padding: 0px 10px;
@@ -119,6 +126,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   gap: 7px;
   position: relative;
   margin: 30px;
@@ -164,4 +172,73 @@
   box-shadow: 3px 3px 10px rgba(0, 0, 0, 1),
     -1px -1px 6px rgba(255, 255, 255, 0.4), inset 3px 3px 10px rgba(0, 0, 0, 1),
     inset -1px -1px 6px rgba(255, 255, 255, 0.4);
+}
+.closeMenuIcon {
+  display: none;
+}
+@media screen and (max-width: 550px) {
+  .menuContainer {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+  }
+
+  .profileMenuWrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column-reverse;
+    height: 100%;
+    width: 100%;
+  }
+
+  .userContainer {
+    width: 100%;
+    height: 90%;
+    justify-content: center;
+  }
+  .userContainer > form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+  .updatePassword {
+    width: 70%;
+    margin: 15px;
+  }
+  .updatePassword > input {
+    width: 100%;
+  }
+  .options {
+    justify-content: center;
+    height: 10%;
+    width: 100%;
+    border-top: 1px solid #26282e;
+  }
+  .options > ul {
+    flex-direction: row;
+  }
+  .options > ul > li {
+    padding: 8px;
+    margin: 10px 35px;
+    font-size: 0px;
+  }
+  .slideRight {
+    transform: translateX(0%);
+  }
+  .closeMenuIcon {
+    display: block;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 25px;
+  }
+  .searchBarWrapper {
+    width: 100% !important; 
+  }
+  .searchBarWrapper > div {
+    width: 100%;
+  }
 }

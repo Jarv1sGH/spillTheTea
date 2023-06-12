@@ -40,13 +40,12 @@ const AddUsersModal = ({ addUsersModalRef }) => {
   };
 
   const handleEnterKey = (e) => {
-    if (e.keyCode === 13) {
+    if (e.key === "Enter") {
       searchUsersHandler(e);
     }
   };
 
   const addToSelectedUsers = (user) => {
-    dispatch(setShowCreateModal(false))
     // if the user is already in the group
     if (
       showCreateModal === false &&

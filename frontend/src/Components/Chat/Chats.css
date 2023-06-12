@@ -3,11 +3,12 @@ i {
   font-size: 20px;
 }
 
-.blueIcon{
+.blueIcon {
   color: #008ecf;
 }
 .chatsOuterContainer {
   height: 100vh;
+  overflow-x: hidden;
   position: relative;
 }
 .brandContainer {
@@ -24,8 +25,10 @@ h3 {
   font-size: 18px;
 }
 .chatsInnerWrapper {
+  position: relative;
   display: flex;
   height: 100%;
+  overflow: hidden;
 }
 .sideMenu {
   position: relative;
@@ -39,7 +42,6 @@ h3 {
 .myProfile {
   position: absolute;
   bottom: 5px;
-  border-right: 50%;
 }
 .myProfile > img {
   width: 45px;
@@ -72,7 +74,8 @@ h3 {
   margin: 20px 10px;
   flex-direction: column;
   overflow: auto;
-  height: 87vh;
+  height: 85vh;
+  padding: 0 0 5px;
 }
 .chatNames > div:first-child {
   display: flex;
@@ -97,10 +100,31 @@ h3 {
   position: relative;
   height: 100%;
   border-right: 2px solid #26282e;
-}
-.chatInfoActive {
-  width: 55%;
-}
-.chatInfoInActive {
   width: 75%;
+}
+
+.myProfileMobile {
+  display: none;
+}
+@media screen and (max-width: 700px) {
+  .chatsOuterContainer {
+    height: 92vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+ 
+  .chatNamesWrapper {
+    height: 80vh;
+  }
+  .myProfileMobile {
+    display: block !important;
+    position: absolute;
+    bottom: 5px;
+    right: 10px;
+  }
+  .myProfileMobile > img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+  }
 }

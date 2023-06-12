@@ -1,6 +1,6 @@
 .groupChatModal {
-  height: 40vh;
-  width: 20vw;
+  height: 480px;
+  width: 580px;
   background: #1b1d24;
   border: 2px solid #008ecf;
   color: white;
@@ -39,7 +39,20 @@
 .modalForm {
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
+
 .modalButtons > button {
   margin: 10px;
+}
+@media screen and (max-width: 700px) {
+  .question > h3 {
+    text-align: center;
+  }
+  .modalButtons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+  }
 }

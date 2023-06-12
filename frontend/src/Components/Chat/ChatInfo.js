@@ -10,7 +10,8 @@ import { leaveGroupChat } from "../../Reducers/chatReducers/deleteGroupChatSlice
 const ChatInfo = (props) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
-  const { setShowChatInfo, setShowChatRoom, addUsersModalRef } = props;
+  const { setShowChatInfo, setShowChatRoom, addUsersModalRef, showChatInfo } =
+    props;
   const { selectedChat } = useSelector((state) => state.selectedChat);
   const [avatar, setAvatar] = useState(null);
   const [chatName, setChatName] = useState(null);
@@ -22,7 +23,6 @@ const ChatInfo = (props) => {
   });
   const modalRef = useRef(null);
   const choiceModalRef = useRef(null);
-  // const addUsersModalRef = useRef(null);
 
   const [removeUserData, setRemoveUserData] = useState({
     chatId: selectedChat?._id,
@@ -87,118 +87,134 @@ const ChatInfo = (props) => {
       return;
     }
     // to remove user and then show toast
-    dispatch(removeUser(removeUserData)).then((action) => {
-      const updatedData = action.payload;
-      if (updatedData.success === true) {
-        toast(updatedData.message);
-        choiceModalRef.current.close();
-      }
-    });
+    dispatch(removeUser(removeUserData))
+      .then((action) => {
+        const updatedData = action.payload;
+        if (updatedData.success === true) {
+          toast(updatedData.message);
+          choiceModalRef.current.close();
+        }
+      })
+      .catch(() => {
+        toast("An error Occured");
+      });
   }, [removeUserData, dispatch]);
 
   const leaveGroupHandler = () => {
-    dispatch(leaveGroupChat(selectedChat._id)).then((action) => {
-      const response = action.payload;
-      setShowChatRoom(false);
-      toast(response.message);
-    });
+    dispatch(leaveGroupChat(selectedChat._id))
+      .then((action) => {
+        const response = action.payload;
+        setShowChatRoom(false);
+        toast(response.message);
+      })
+      .catch(() => {
+        toast("An error Occured");
+      });
   };
   return (
-    <div className="chatInfoContainer">
-      {selectedChat && (
-        <dialog ref={modalRef} className="groupChatModal">
-          <EditGroupModal modalRef={modalRef} />
-        </dialog>
-      )}
-      {selectedChat && (
-        <dialog ref={choiceModalRef} className="confirmChoiceModal">
-          <ConfirmChoiceModal
-            choiceModal={choiceModalRef}
-            showDeleteModal={showDeleteModal}
-            setRemoveUserData={setRemoveUserData}
-            removeUserId={removeUserId}
-            setShowChatRoom={setShowChatRoom}
-          />
-        </dialog>
-      )}
-      <i
-        title="close"
-        onClick={closeChatInfoHandler}
-        className="fa-solid fa-xmark"
-      ></i>
-      <div className="chatUserInfo">
-        <div className="chatIcon">
-          <img src={avatar} alt="" />
-        </div>
-        {selectedChat?.isGroupChat === false ? (
-          <>
-            <div className="chatName">
-              <h2>{chatName}</h2>
-            </div>
-            <div className="idkWhatToNameThisDiv">
-              <p>
-                <i className="fa-solid fa-envelope blueIcon"></i> Email
-              </p>
-              <h3>{chatUserEmail}</h3>
-            </div>
-            <div className="idkWhatToNameThisDiv">
-              <p>
-                <i className="fa-solid fa-address-card blueIcon"></i> About
-              </p>
-              <h3>{chatUserAbout}</h3>
-            </div>
-          </>
-        ) : (
-          <div className="groupChatInfo">
-            <div className="chatName">
-              <h2>{chatName} </h2>
-            </div>
-            <div className="groupChatMembers">
-              <p>
-                Members <i className="fa-solid fa-users blueIcon"></i>
-              </p>
-              {selectedChat?.users &&
-                selectedChat?.users.map((user) => (
-                  <div key={user?._id} className="member">
-                    {isUserGroupAdmin === true &&
-                      selectedChat?.groupAdmin?._id !== user._id && (
-                        <i
-                          onClick={() => removeUserHandler(user)}
-                          title="kick user "
-                          className="fa-solid fa-person-walking-arrow-right"
-                        ></i>
-                      )}
-                    <img src={user?.profilePic?.url} alt="user" />
-                    <div>
-                      <p>
-                        {user?.name}{" "}
-                        {selectedChat?.groupAdmin?._id === user?._id && (
-                          <span id="admin">admin</span>
-                        )}
-                      </p>
-                      <p>{user?.email}</p>
-                    </div>
-                  </div>
-                ))}
-              <p>
-                <i
-                  onClick={addUsersHandler}
-                  title="Add users to group"
-                  style={{ fontSize: "25px" }}
-                  className="fa-solid fa-circle-plus "
-                ></i>
-              </p>
-            </div>
-            {isUserGroupAdmin === true ? (
-              <div className="groupButtons">
-                <button onClick={showModal}>Edit Group</button>
-                <button onClick={showChoiceModal}>delete Group</button>
-              </div>
-            ) : (
-              <button onClick={leaveGroupHandler}>Leave Group</button>
-            )}
-          </div>
+    <div
+      className={
+        showChatInfo
+          ? "chatInfoWrapperOuter chatInfoActive"
+          : "chatInfoWrapperOuter"
+      }
+    >
+      <div className="chatInfoContainer">
+        {selectedChat && (
+          <dialog ref={modalRef} className="groupChatModal">
+            <EditGroupModal modalRef={modalRef} />
+          </dialog>
         )}
+        {selectedChat && (
+          <dialog ref={choiceModalRef} className="confirmChoiceModal">
+            <ConfirmChoiceModal
+              choiceModal={choiceModalRef}
+              showDeleteModal={showDeleteModal}
+              setRemoveUserData={setRemoveUserData}
+              removeUserId={removeUserId}
+              setShowChatRoom={setShowChatRoom}
+            />
+          </dialog>
+        )}
+        <i
+          title="close"
+          onClick={closeChatInfoHandler}
+          className="fa-solid fa-xmark"
+        ></i>
+        <div className="chatUserInfo">
+          <div className="chatIcon">
+            <img src={avatar} alt="" />
+          </div>
+          {selectedChat?.isGroupChat === false ? (
+            <>
+              <div className="chatName">
+                <h2>{chatName}</h2>
+              </div>
+              <div className="idkWhatToNameThisDiv">
+                <p>
+                  <i className="fa-solid fa-envelope blueIcon"></i> Email
+                </p>
+                <h3>{chatUserEmail}</h3>
+              </div>
+              <div className="idkWhatToNameThisDiv">
+                <p>
+                  <i className="fa-solid fa-address-card blueIcon"></i> About
+                </p>
+                <h3>{chatUserAbout}</h3>
+              </div>
+            </>
+          ) : (
+            <div className="groupChatInfo">
+              <div className="chatName">
+                <h2>{chatName} </h2>
+              </div>
+              <div className="groupChatMembers">
+                <p>
+                  Members <i className="fa-solid fa-users blueIcon"></i>
+                </p>
+                {selectedChat?.users &&
+                  selectedChat?.users.map((user) => (
+                    <div key={user?._id} className="member">
+                      {isUserGroupAdmin === true &&
+                        selectedChat?.groupAdmin?._id !== user._id && (
+                          <i
+                            onClick={() => removeUserHandler(user)}
+                            title="kick user "
+                            className="fa-solid fa-person-walking-arrow-right"
+                          ></i>
+                        )}
+                      <img src={user?.profilePic?.url} alt="user" />
+                      <div>
+                        <p>
+                          {user?.name}{" "}
+                          {selectedChat?.groupAdmin?._id === user?._id && (
+                            <span id="admin">admin</span>
+                          )}
+                        </p>
+                        <p>{user?.email}</p>
+                      </div>
+                    </div>
+                  ))}
+                <p>
+                  <i
+                    onClick={addUsersHandler}
+                    title="Add users to group"
+                    style={{ fontSize: "25px" }}
+                    className="fa-solid fa-circle-plus "
+                  ></i>
+                </p>
+              </div>
+              {isUserGroupAdmin === true ? (
+                <div className="groupButtons">
+                  <button onClick={showModal}>Edit Group</button>
+                  <button onClick={showChoiceModal}>delete Group</button>
+                </div>
+              ) : (
+                <button onClick={leaveGroupHandler}>Leave Group</button>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

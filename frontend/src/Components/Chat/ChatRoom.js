@@ -4,10 +4,12 @@ import { useSelector, useDispatch } from "react-redux";
 import { sendMessage } from "./../../Reducers/chatReducers/sendMessageSlice";
 import Loader from "../Loader/Loader";
 import { fetchMessages } from "../../Reducers/chatReducers/fetchMessagesSlice";
+import { fetchAllChats } from "../../Reducers/chatReducers/allChatsSlice";
 import ScrollableChat from "./ScrollableChat";
 import { setChatDetails } from "../../chatLogic";
 import { toast } from "react-toastify";
 import io from "socket.io-client";
+import { setSelectedChat } from "../../Reducers/chatReducers/selectedChatSlice";
 const ENDPOINT = "http://localhost:4000";
 let selectedChatCompare;
 const ChatRoom = (props) => {
@@ -17,7 +19,7 @@ const ChatRoom = (props) => {
   const [avatar, setAvatar] = useState(null);
   const [chatName, setChatName] = useState(null);
   const [socket, setSocket] = useState(null);
-  const { setShowChatInfo, showChatInfo } = props;
+  const { setShowChatInfo, showChatInfo, setMobileChatRoom } = props;
   const { messages, loading } = useSelector((state) => state.messages);
   const { selectedChat } = useSelector((state) => state.selectedChat);
   const { user } = useSelector((state) => state.user);
@@ -83,13 +85,19 @@ const ChatRoom = (props) => {
   };
 
   const handleEnterKey = (e) => {
-    if (e.keyCode === 13) {
+    if (e.key === "Enter") {
       sendMessageHandler(e);
     }
   };
 
   const showChatInfoHandler = () => {
     setShowChatInfo(!showChatInfo);
+  };
+
+  const mobileScreenHandler = () => {
+    setMobileChatRoom(false);
+    dispatch(setSelectedChat(null));
+    dispatch(fetchAllChats());
   };
 
   // listens for new Messages
@@ -121,6 +129,10 @@ const ChatRoom = (props) => {
     <>
       <div>
         <div className="chatHeader">
+          <i
+            onClick={mobileScreenHandler}
+            className="fa-solid fa-arrow-left-long backArrow"
+          ></i>
           <img src={avatar} alt="error" className="friendAvatar" />
           <p>{chatName}</p>
           <i

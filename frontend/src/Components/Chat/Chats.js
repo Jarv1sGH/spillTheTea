@@ -5,7 +5,7 @@ import Chat from "./Chat";
 import ChatRoom from "./ChatRoom";
 import "./Chats.css";
 import { fetchAllChats } from "../../Reducers/chatReducers/allChatsSlice";
-import OverlayMenu from "../ProfileMenu/OverlayMenu";
+import ProfileMenu from "../ProfileMenu/ProfileMenu";
 import ChatInfo from "./ChatInfo";
 import Loader from "../Loader/Loader";
 import SearchBar from "../searchBar/SearchBar";
@@ -18,6 +18,7 @@ const Chats = () => {
   const dispatch = useDispatch();
   const [showChatRoom, setShowChatRoom] = useState(false);
   const [settingsActive, setSettingsActive] = useState(false);
+  const [mobileChatRoom, setMobileChatRoom] = useState(false);
   const [showChatInfo, setShowChatInfo] = useState(false);
   const { updatedGroupChat } = useSelector((state) => state.updatedGroupChat);
   const { selectedChat } = useSelector((state) => state.selectedChat);
@@ -96,7 +97,13 @@ const Chats = () => {
           >
             <AddUsersModal addUsersModalRef={addUsersModalRef} />
           </dialog>
-          {<OverlayMenu settingsActive={settingsActive} innerRef={menuRef} />}
+          {
+            <ProfileMenu
+              settingsActive={settingsActive}
+              setSettingsActive={setSettingsActive}
+              innerRef={menuRef}
+            />
+          }
           <div className="chatsInnerWrapper">
             <div className="sideMenu">
               <i
@@ -124,7 +131,7 @@ const Chats = () => {
                       addUsersModalRef.current.showModal();
                     }}
                     title="create group chat"
-                    className="fa-solid fa-pen-to-square"
+                    className="fa-solid fa-users"
                   ></i>
                 </div>
                 <SearchBar />
@@ -139,22 +146,34 @@ const Chats = () => {
                         }
                         key={item._id}
                       >
-                        <Chat chat={item} setShowChatRoom={setShowChatRoom} />
+                        <Chat
+                          chat={item}
+                          setShowChatRoom={setShowChatRoom}
+                          setMobileChatRoom={setMobileChatRoom}
+                        />
                       </div>
                     ))}
+                </div>
+                <div onClick={settingsHandler} className="myProfileMobile">
+                  <img
+                    title="my profile"  
+                    src={user?.user?.profilePic?.url}
+                    alt="userProfile"
+                  />
                 </div>
               </div>
               {showChatRoom ? (
                 <div
                   className={
-                    showChatInfo
-                      ? "chatRoom chatInfoActive"
-                      : "chatRoom chatInfoInActive"
+                    mobileChatRoom === true
+                      ? "chatRoom mobileChatRoomOpen"
+                      : "chatRoom mobileChatRoomClose "
                   }
                 >
                   <ChatRoom
                     setShowChatInfo={setShowChatInfo}
                     showChatInfo={showChatInfo}
+                    setMobileChatRoom={setMobileChatRoom}
                   />
                 </div>
               ) : (
@@ -167,11 +186,12 @@ const Chats = () => {
                 </div>
               )}
 
-              {showChatInfo && showChatRoom && (
+              {showChatRoom && (
                 <ChatInfo
                   setShowChatRoom={setShowChatRoom}
                   setShowChatInfo={setShowChatInfo}
                   addUsersModalRef={addUsersModalRef}
+                  showChatInfo={showChatInfo}
                 />
               )}
             </div>
