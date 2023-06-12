@@ -10,6 +10,7 @@ import { setChatDetails } from "../../chatLogic";
 import { toast } from "react-toastify";
 import io from "socket.io-client";
 import { setSelectedChat } from "../../Reducers/chatReducers/selectedChatSlice";
+// const ENDPOINT = "http://localhost:4000";
 const ENDPOINT = "https://spillthetea.vercel.app";
 let selectedChatCompare;
 const ChatRoom = (props) => {

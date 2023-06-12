@@ -32,6 +32,12 @@ const SignInForm = (props) => {
     navigate("/chats");
   };
 
+  const loginAsGuest = ()=>{
+    dispatch(loginUser({
+      email:"guestUser123@spilltheteamail.com",
+      password:"Guest@123"
+    }))
+  }
   // To show toast on invalid login credentials
   const prevErrorRef = useRef(null);
   useEffect(() => {
@@ -91,8 +97,11 @@ const SignInForm = (props) => {
             ></i>
           </div>
         </label>
-        <p id="forgotPasswordText" onClick={onClickHandler}>
+        <p className="forgotPasswordText" onClick={onClickHandler}>
           Forgot your password?
+        </p>
+        <p className="forgotPasswordText" onClick={loginAsGuest}>
+          Just Checking? Login as Guest
         </p>
         <button type="submit">Log In</button>
       </form>

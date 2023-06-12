@@ -40,10 +40,10 @@ p {
   margin: 20px 0 30px;
 }
 
-#forgotPasswordText {
+.forgotPasswordText {
   color: #239232;
   font-size: 14px;
-  margin: 15px 0;
+  margin: 5px 0;
   cursor: pointer;
 }
 .LoginSignContainer {
@@ -280,7 +280,7 @@ button.ghost {
   .overlayPanel > p {
     display: none;
   }
-  #forgotPasswordText {
+  .forgotPasswordText {
     display: block;
   }
   button {

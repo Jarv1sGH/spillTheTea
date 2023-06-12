@@ -22,3 +22,8 @@ CLOUDINARY_NAME,
 CLOUDINARY_API_KEY,
 CLOUDINARY_API_SECRET,
 
+Currently Real time messages are not working on the deployment because vercel does not
+support websocket connections, It works if you run the project locally.
+
+Change the ENDPOINT in ChatRoom.js to,
+const ENDPOINT = "http://localhost:4000" if you want to run it locally.

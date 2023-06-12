@@ -31,7 +31,7 @@ const server = app.listen(process.env.PORT || 4000, () => {
 const io = require("socket.io")(server, {
   pingTimeout: 60000,
   cors: {
-    origin: ["http://localhost:4000", "spillthetea.vercel.app"],
+    origin: ["http://localhost:3000", "spillthetea.vercel.app"],
   },
 });
 io.on("connection", (socket) => {
