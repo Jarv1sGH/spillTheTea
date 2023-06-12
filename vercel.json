@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "name": "shopzone",
+  "builds": [
+    {
+      "src": "backend/server.js",
+      "use": "@vercel/node",
+      "config": {
+        "env": {
+          "NPM_CONFIG_PRODUCTION": "false"
+        }
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "backend/server.js"
+    }
+  ]
+}
