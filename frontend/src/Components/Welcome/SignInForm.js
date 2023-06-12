@@ -32,12 +32,15 @@ const SignInForm = (props) => {
     navigate("/chats");
   };
 
-  const loginAsGuest = ()=>{
-    dispatch(loginUser({
-      email:"guestUser123@spilltheteamail.com",
-      password:"Guest@123"
-    }))
-  }
+  const guestUserPassword = process.env.REACT_APP_GUEST_PASSWORD;
+  const loginAsGuest = () => {
+    dispatch(
+      loginUser({
+        email: "guestUser123@spilltheteamail.com",
+        password: guestUserPassword,
+      })
+    );
+  };
   // To show toast on invalid login credentials
   const prevErrorRef = useRef(null);
   useEffect(() => {

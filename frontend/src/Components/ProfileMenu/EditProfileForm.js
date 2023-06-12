@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { editProfile } from "../../Reducers/userReducers/editProfileSlice";
 import Loader from "../Loader/Loader";
+import { toast } from "react-toastify";
 const EditProfileForm = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
@@ -29,6 +30,11 @@ const EditProfileForm = () => {
   };
   const editFormSubmit = (e) => {
     e.preventDefault();
+    // checks for guest user
+    if (user?.user?._id === "64872baccb3b3c1a31e05e8a") {
+      toast("Cannot edit profile as guest user");
+      return;
+    }
     dispatch(editProfile(formData));
   };
   return (
