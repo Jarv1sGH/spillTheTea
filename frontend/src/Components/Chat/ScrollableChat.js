@@ -6,6 +6,15 @@ const ScrollableChat = (props) => {
   const { chatName, messagesArr } = props;
   return (
     <div className="chatRoomInner">
+      {/* <div className="typingWrapper">
+          <div className="typing">
+            <span className="bar"></span>
+            <span className="bar"></span>
+            <span className="bar"></span>
+          </div>
+          Typing...
+        </div> */}
+
       {messagesArr?.length === 0 && (
         <p style={{ alignSelf: "center" }}>
           Send your first message to {chatName}
@@ -22,7 +31,7 @@ const ScrollableChat = (props) => {
                   className="message"
                 >
                   <div className="msgContent">
-                    <p  className="senderMessages">
+                    <p className="senderMessages">
                       {message?.message}
                       {selectedChat?.isGroupChat && (
                         <span id="senderUserName">{message.sender.name} </span>

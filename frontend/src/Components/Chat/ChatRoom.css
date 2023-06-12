@@ -22,6 +22,7 @@
 }
 
 .chatRoomInner {
+  position: relative;
   height: 83vh;
   padding: 0px 50px;
   overflow-y: auto;
@@ -123,6 +124,49 @@
   display: none;
 }
 
+/* Typing indiator */
+/* .typing {
+  display: flex;
+  align-items: center;
+}
+.typingWrapper {
+  left: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 10%;
+}
+
+.bar {
+  display: inline-block;
+  width: 3px;
+  height: 15px;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 10px;
+  animation: scale-up4 1s linear infinite;
+}
+
+.bar:nth-child(2) {
+  height: 25px;
+  margin: 0 5px;
+  animation-delay: 0.25s;
+}
+
+.bar:nth-child(3) {
+  animation-delay: 0.5s;
+}
+
+@keyframes scale-up4 {
+  20% {
+    background-color: #ffff;
+    transform: scaleY(1.5);
+  }
+
+  40% {
+    transform: scaleY(1);
+  }
+} */
+
 @media screen and (max-width: 1150px) {
   .startChatting {
     max-width: 65%;
@@ -136,12 +180,12 @@
     display: block;
   }
   .chatRoomInner {
-    padding: 0; 
+    padding: 0;
   }
   .flexEnd {
     margin-right: 4px;
   }
-  .chatRoomInner{
-   height: 75vh; 
+  .chatRoomInner {
+    height: 75vh;
   }
 }
